@@ -1,0 +1,64 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Iniciar Sesión — Gestión de Semilleros</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/icons-webfont@latest/tabler-icons.min.css" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/css/login.css")" rel="stylesheet" />
+</head>
+<body>
+    <div class="login-page">
+        <div class="bg-image"></div>
+        <div class="overlay"></div>
+
+        <div class="marca">
+            <h1>Gestión de Semilleros</h1>
+            <p>Plataforma de investigación académica</p>
+        </div>
+
+        <div class="tarjeta-login">
+            <div>
+                <h2>Bienvenido</h2>
+                <p class="subtitulo">Ingresa tus credenciales para continuar</p>
+            </div>
+
+
+
+            @if (ViewBag.Error != null)
+            {
+                <div class="mensaje-error">
+                    <i class="ti ti-alert-circle"></i> @ViewBag.Error
+                </div>
+            }
+
+            @using (Html.BeginForm("Index", "Login", FormMethod.Post))
+            {
+                <div>
+                    <label class="etiqueta-campo">Correo electrónico</label>
+                    <div class="contenedor-input">
+                        <span>📧</span>
+                        <input type="text" name="correo" placeholder="correo@institucion.edu.co" required />
+                    </div>
+                </div>
+                <div>
+                    <label class="etiqueta-campo">Contraseña</label>
+                    <div class="contenedor-input">
+                        <span>🔒</span>
+                        <input type="password" name="contrasena" placeholder="••••••••" required />
+                    </div>
+                </div>
+
+                <a class="olvide-contrasena">¿Olvidaste tu contraseña?</a>
+                <button type="submit" class="boton-ingresar">Iniciar sesión</button>
+            }
+        </div>
+
+        <p class="texto-pie">© 2025 Sistema de Gestión de Semilleros</p>
+    </div>
+</body>
+</html>

@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GestionSemilleros.Models.Entidades
 {
+    [Table("Usuario")]
     public class Usuario
     {
         [Key]

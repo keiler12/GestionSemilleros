@@ -1,0 +1,179 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.login-page {
+    height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bg-image {
+    position: absolute;
+    inset: 0;
+    background-image: url('/Content/images/fondo-login.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+.overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(8, 80, 133, 0.55);
+}
+
+.marca {
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    z-index: 2;
+}
+
+    .marca h1 {
+        color: #fff;
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+    .marca p {
+        color: rgba(255,255,255,0.7);
+        font-size: 13px;
+    }
+
+.tarjeta-login {
+    position: relative;
+    z-index: 2;
+    background: #fff;
+    border-radius: 12px;
+    padding: 2rem 2rem;
+    width: 360px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+}
+
+    .tarjeta-login h2 {
+        font-size: 22px;
+        font-weight: 600;
+        color: #1a1a2e;
+    }
+
+    .tarjeta-login .subtitulo {
+        font-size: 13px;
+        color: #6b7280;
+        margin-top: 2px;
+    }
+
+.separador {
+    border: none;
+    border-top: 1px solid #e5e7eb;
+}
+
+.etiqueta-campo {
+    font-size: 13px;
+    color: #374151;
+    margin-bottom: 5px;
+    display: block;
+    font-weight: 500;
+}
+
+.contenedor-input {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+    .contenedor-input i {
+        position: absolute;
+        left: 10px;
+        font-size: 17px;
+        color: #378ADD;
+    }
+
+    .contenedor-input input {
+        width: 100%;
+        padding: 10px 12px 10px 36px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 14px;
+        color: #1a1a2e;
+        outline: none;
+        transition: border 0.2s;
+        text-align: left;
+    }
+
+        .contenedor-input input:focus {
+            border-color: #378ADD;
+        }
+
+.olvide-contrasena {
+    font-size: 12px;
+    color: #378ADD;
+    text-align: right;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+}
+
+.boton-ingresar {
+    width: 100%;
+    padding: 11px;
+    background: #378ADD;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+    .boton-ingresar:hover {
+        background: #185FA5;
+    }
+
+.mensaje-error {
+    background: #fee2e2;
+    color: #b91c1c;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 13px;
+    text-align: center;
+}
+
+.texto-pie {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    color: rgba(255,255,255,0.5);
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+.contenedor-input input::placeholder {
+    text-align: left;
+}
+
+.contenedor-input input {
+    text-align: left;
+    direction: ltr;
+}
+
+.contenedor-input span {
+    position: absolute;
+    left: 10px;
+    font-size: 16px;
+    pointer-events: none;
+}

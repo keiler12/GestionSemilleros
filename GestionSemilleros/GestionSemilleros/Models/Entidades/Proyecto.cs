@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GestionSemilleros.Models.Entidades
 {
+    [Table("Proyecto")]
     public class Proyecto
     {
         [Key]

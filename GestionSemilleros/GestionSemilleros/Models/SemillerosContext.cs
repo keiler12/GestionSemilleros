@@ -24,30 +24,27 @@ namespace GestionSemilleros.Models.DAO
         public DbSet<Actividad> Actividades { get; set; }
         public DbSet<Evento> Eventos { get; set; }
         public DbSet<Patrocinador> Patrocinadores { get; set; }
-       
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            // Tabla intermedia ProyectosEventos
             modelBuilder.Entity<Proyecto>()
-                .HasMany(p => p.Eventos)
-                .WithMany(e => e.Proyectos)
-                .Map(m =>
+                .HasMany(proyecto => proyecto.Eventos)
+                .WithMany(evento => evento.Proyectos)
+                .Map(mapa =>
                 {
-                    m.ToTable("ProyectosEventos");
-                    m.MapLeftKey("idProyecto");
-                    m.MapRightKey("idEvento");
+                    mapa.ToTable("ProyectosEventos");
+                    mapa.MapLeftKey("idProyecto");
+                    mapa.MapRightKey("idEvento");
                 });
 
-            // Tabla intermedia EventoPatrocinadores
             modelBuilder.Entity<Evento>()
-                .HasMany(e => e.Patrocinadores)
-                .WithMany(p => p.Eventos)
-                .Map(m =>
+                .HasMany(evento => evento.Patrocinadores)
+                .WithMany(patrocinador => patrocinador.Eventos)
+                .Map(mapa =>
                 {
-                    m.ToTable("EventoPatrocinadores");
-                    m.MapLeftKey("idEvento");
-                    m.MapRightKey("idPatrocinador");
+                    mapa.ToTable("EventoPatrocinadores");
+                    mapa.MapLeftKey("idEvento");
+                    mapa.MapRightKey("idPatrocinador");
                 });
 
             base.OnModelCreating(modelBuilder);

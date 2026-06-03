@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GestionSemilleros.Models.Entidades
 {
+    [Table("Actividad")]
     public class Actividad
     {
         [Key]

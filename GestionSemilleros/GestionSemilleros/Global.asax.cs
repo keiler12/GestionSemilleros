@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Data.Entity;
 using System.Web.Mvc;
-using System.Web.Optimization;
 using System.Web.Routing;
+using GestionSemilleros.Models.DAO;
 
 namespace GestionSemilleros
 {
@@ -12,10 +9,15 @@ namespace GestionSemilleros
     {
         protected void Application_Start()
         {
+            Database.SetInitializer(new CreateDatabaseIfNotExists<SemillerosContext>());
+
+            using (var baseDatos = new SemillerosContext())
+            {
+                baseDatos.Database.Initialize(force: true);
+            }
+
             AreaRegistration.RegisterAllAreas();
-            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-            BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
     }
 }

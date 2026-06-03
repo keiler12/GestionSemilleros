@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GestionSemilleros.Models.Entidades
 {
+    [Table("Patrocinador")]
     public class Patrocinador
     {
         [Key]
