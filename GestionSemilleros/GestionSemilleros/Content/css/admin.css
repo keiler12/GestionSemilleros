@@ -1,0 +1,111 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    font-family: 'Segoe UI', sans-serif;
+    background: #f0f6fd;
+}
+
+.contenedor-principal {
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    width: 210px;
+    min-width: 210px;
+    background: #185FA5;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+
+.sidebar-encabezado {
+    padding: 1.25rem 1rem;
+    border-bottom: 0.5px solid rgba(255,255,255,0.15);
+}
+
+    .sidebar-encabezado .rol {
+        font-size: 15px;
+        font-weight: 600;
+        color: #fff;
+    }
+
+    .sidebar-encabezado .bienvenida {
+        font-size: 11px;
+        color: rgba(255,255,255,0.55);
+        margin-top: 2px;
+    }
+
+.menu-items {
+    display: flex;
+    flex-direction: column;
+    padding: 0.75rem 0;
+    gap: 2px;
+    flex: 1;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 1rem;
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.75);
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    transition: all 0.15s;
+}
+
+    .menu-item:hover {
+        background: rgba(255,255,255,0.1);
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .menu-item.activo {
+        border-left-color: #fff;
+        background: rgba(255,255,255,0.15);
+        color: #fff;
+    }
+
+    .menu-item i {
+        font-size: 18px;
+    }
+
+.cerrar-sesion {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 1rem;
+    font-size: 13px;
+    color: rgba(255,255,255,0.45);
+    text-decoration: none;
+    border-top: 0.5px solid rgba(255,255,255,0.15);
+    transition: all 0.15s;
+}
+
+    .cerrar-sesion:hover {
+        color: #fff;
+        background: rgba(255,255,255,0.08);
+        text-decoration: none;
+    }
+
+    .cerrar-sesion i {
+        font-size: 18px;
+    }
+
+.area-contenido {
+    margin-left: 210px;
+    flex: 1;
+    padding: 2rem;
+    overflow-y: auto;
+}

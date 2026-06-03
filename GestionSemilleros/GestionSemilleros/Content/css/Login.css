@@ -25,11 +25,7 @@ html, body {
     background-position: center;
 }
 
-.overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(8, 80, 133, 0.55);
-}
+
 
 .marca {
     position: absolute;
@@ -40,25 +36,26 @@ html, body {
 
     .marca h1 {
         color: #fff;
-        font-size: 20px;
+        font-size: 50px;
         font-weight: 600;
     }
 
     .marca p {
         color: rgba(255,255,255,0.7);
-        font-size: 13px;
+        font-size: 35px;
     }
 
 .tarjeta-login {
     position: relative;
     z-index: 2;
-    background: #fff;
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(8px);
     border-radius: 12px;
-    padding: 2rem 2rem;
-    width: 360px;
+    padding: 3.5rem 3.5rem;
+    width: 550px;
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
+    gap: 1.2rem;
     box-shadow: 0 8px 32px rgba(0,0,0,0.18);
 }
 
@@ -95,14 +92,14 @@ html, body {
 
     .contenedor-input i {
         position: absolute;
-        left: 10px;
-        font-size: 17px;
+        left: 12px;
+        font-size: 18px;
         color: #378ADD;
     }
 
     .contenedor-input input {
         width: 100%;
-        padding: 10px 12px 10px 36px;
+        padding: 12px 14px 12px 40px;
         border: 1px solid #d1d5db;
         border-radius: 8px;
         font-size: 14px;
@@ -127,8 +124,8 @@ html, body {
 
 .boton-ingresar {
     width: 100%;
-    padding: 11px;
-    background: #378ADD;
+    padding: 13px;
+    background: #185FA5;
     color: #fff;
     border: none;
     border-radius: 8px;
@@ -136,6 +133,7 @@ html, body {
     font-weight: 600;
     cursor: pointer;
     transition: background 0.2s;
+    margin-top: 0.5rem;
 }
 
     .boton-ingresar:hover {
@@ -176,4 +174,10 @@ html, body {
     left: 10px;
     font-size: 16px;
     pointer-events: none;
+}
+
+.field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
