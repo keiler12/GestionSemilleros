@@ -13,7 +13,7 @@ namespace GestionSemilleros
 
             using (var baseDatos = new SemillerosContext())
             {
-                baseDatos.Database.Initialize(force: true);
+                Database.SetInitializer<SemillerosContext>(null);
             }
 
             AreaRegistration.RegisterAllAreas();

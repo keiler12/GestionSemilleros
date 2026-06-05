@@ -8,8 +8,8 @@ namespace GestionSemilleros.Models.Entidades
     public class Reunion
     {
         [Key]
-        public decimal IdReunion { get; set; }
-        public decimal IdUsuario { get; set; }
+        public int IdReunion { get; set; }
+        public int IdUsuario { get; set; }
         public string TipoReunion { get; set; }
         public TimeSpan HoraReunion { get; set; }
         public string MotivoReunion { get; set; }

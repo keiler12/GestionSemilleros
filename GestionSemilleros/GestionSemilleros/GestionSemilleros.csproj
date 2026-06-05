@@ -130,6 +130,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202606050412113_Inicial.cs" />
+    <Compile Include="Migrations\202606050412113_Inicial.Designer.cs">
+      <DependentUpon>202606050412113_Inicial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Entidades\Actividad.cs" />
     <Compile Include="Models\Entidades\Evento.cs" />
     <Compile Include="Models\Entidades\Fase.cs" />
@@ -197,6 +202,8 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Login\Index.cshtml" />
     <Content Include="Views\Administrador\Usuarios.cshtml" />
+    <Content Include="Views\Administrador\Semilleros.cshtml" />
+    <Content Include="Views\Administrador\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -227,6 +234,11 @@
     <Content Include="Scripts\bootstrap.bundle.js.map" />
     <Content Include="Scripts\jquery-3.7.0.slim.min.map" />
     <Content Include="Scripts\jquery-3.7.0.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202606050412113_Inicial.resx">
+      <DependentUpon>202606050412113_Inicial.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

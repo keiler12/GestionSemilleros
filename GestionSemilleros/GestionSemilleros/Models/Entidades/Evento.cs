@@ -9,7 +9,7 @@ namespace GestionSemilleros.Models.Entidades
     public class Evento
     {
         [Key]
-        public decimal IdEvento { get; set; }
+        public int IdEvento { get; set; }
         public string LugarEvento { get; set; }
         public string NombreEvento { get; set; }
         public string TipoEvento { get; set; }

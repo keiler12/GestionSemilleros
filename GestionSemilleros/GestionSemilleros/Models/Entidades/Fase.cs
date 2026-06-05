@@ -8,8 +8,8 @@ namespace GestionSemilleros.Models.Entidades
     public class Fase
     {
         [Key]
-        public decimal IdFase { get; set; }
-        public decimal IdProyecto { get; set; }
+        public int IdFase { get; set; }
+        public int IdProyecto { get; set; }
         public string NombreFase { get; set; }
         public string DuracionFase { get; set; }
 

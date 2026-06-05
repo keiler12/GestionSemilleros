@@ -9,8 +9,8 @@ namespace GestionSemilleros.Models.Entidades
     public class Proyecto
     {
         [Key]
-        public decimal IdProyecto { get; set; }
-        public decimal IdSemillero { get; set; }
+        public int IdProyecto { get; set; }
+        public int IdSemillero { get; set; }
         public string TituloProyecto { get; set; }
         public string ObjetivoProyecto { get; set; }
         public string DescripcionProyecto { get; set; }

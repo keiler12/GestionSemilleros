@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GestionSemilleros.Models.DAO;
+using GestionSemilleros.Models.Entidades;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,70 +10,65 @@ namespace GestionSemilleros.Controllers
 {
     public class AdministradorController : Controller
     {
+        private SemillerosContext baseDatos = new SemillerosContext();
+
         public ActionResult Index()
         {
-            // Verifica si el usuario tiene el rol de "Administrador" en la sesión, si no es así, redirige al inicio de sesión
             if (Session["Rol"] == null || Session["Rol"].ToString() != "Administrador")
                 return RedirectToAction("Index", "Login");
 
-            return RedirectToAction("Usuarios");
-        }
-
-        public ActionResult Usuarios()
-        {
-            // Verifica si el usuario tiene el rol de "Administrador" en la sesión, si no es así, redirige al inicio de sesión
-            if (Session["Rol"] == null || Session["Rol"].ToString() != "Administrador")
-                return RedirectToAction("Index", "Login");
-
-            ViewBag.MenuActivo = "Usuarios";
+            ViewBag.MenuActivo = "Inicio";
             return View();
         }
 
+        //  SEMILLEROS 
+
         public ActionResult Semilleros()
         {
-
             if (Session["Rol"] == null || Session["Rol"].ToString() != "Administrador")
                 return RedirectToAction("Index", "Login");
 
             ViewBag.MenuActivo = "Semilleros";
-            return View();
+            var listaSemilleros = baseDatos.Semilleros.ToList();
+            return View(listaSemilleros);
         }
 
-        public ActionResult Proyectos()
+        [HttpPost]
+        public ActionResult RegistrarSemillero(Semillero semillero)
         {
-            if (Session["Rol"] == null || Session["Rol"].ToString() != "Administrador")
-                return RedirectToAction("Index", "Login");
+            int ultimoId = baseDatos.Semilleros.Any()
+                ? baseDatos.Semilleros.Max(registro => registro.IdSemillero)
+                : 99;
 
-            ViewBag.MenuActivo = "Proyectos";
-            return View();
+            semillero.IdSemillero = ultimoId + 1;
+            baseDatos.Semilleros.Add(semillero);
+            baseDatos.SaveChanges();
+            return RedirectToAction("Semilleros");
         }
 
-        public ActionResult Eventos()
+        [HttpPost]
+        public ActionResult ModificarSemillero(Semillero semillero)
         {
-            if (Session["Rol"] == null || Session["Rol"].ToString() != "Administrador")
-                return RedirectToAction("Index", "Login");
-
-            ViewBag.MenuActivo = "Eventos";
-            return View();
+            var registro = baseDatos.Semilleros.Find(semillero.IdSemillero);
+            if (registro != null)
+            {
+                registro.NombreSemillero = semillero.NombreSemillero;
+                registro.LineaSemillero = semillero.LineaSemillero;
+                registro.EnfoqueSemillero = semillero.EnfoqueSemillero;
+                baseDatos.SaveChanges();
+            }
+            return RedirectToAction("Semilleros");
         }
 
-        public ActionResult Reportes()
+        public ActionResult EliminarSemillero(decimal id)
         {
-            if (Session["Rol"] == null || Session["Rol"].ToString() != "Administrador")
-                return RedirectToAction("Index", "Login");
-
-            ViewBag.MenuActivo = "Reportes";
-            return View();
-        }
-
-        public ActionResult Patrocinadores()
-        {
-            
-            if (Session["Rol"] == null || Session["Rol"].ToString() != "Administrador")
-                return RedirectToAction("Index", "Login");
-
-            ViewBag.MenuActivo = "Patrocinadores";
-            return View();
+            var registro = baseDatos.Semilleros.Find(id);
+            if (registro != null)
+            {
+                baseDatos.Semilleros.Remove(registro);
+                baseDatos.SaveChanges();
+            }
+            return RedirectToAction("Semilleros");
         }
     }
 }

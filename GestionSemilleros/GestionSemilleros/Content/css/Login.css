@@ -36,13 +36,13 @@ html, body {
 
     .marca h1 {
         color: #fff;
-        font-size: 50px;
+        font-size: 40px;
         font-weight: 600;
     }
 
     .marca p {
         color: rgba(255,255,255,0.7);
-        font-size: 35px;
+        font-size: 25px;
     }
 
 .tarjeta-login {
@@ -155,7 +155,7 @@ html, body {
     left: 50%;
     transform: translateX(-50%);
     z-index: 2;
-    color: rgba(255,255,255,0.5);
+    color: rgb(0, 0, 0, 0.50);
     font-size: 11px;
     white-space: nowrap;
 }
@@ -179,5 +179,30 @@ html, body {
 .field-group {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    
+}
+
+    .field-group > div {
+        margin-bottom: 1.5rem;
+    }
+
+@media (max-width: 768px) {
+    .login-page {
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+    }
+
+    .tarjeta-login {
+        width: 100%;
+        padding: 2rem 1.5rem;
+    }
+
+    .marca h1 {
+        font-size: 16px;
+    }
+
+    .marca p {
+        font-size: 11px;
+    }
 }

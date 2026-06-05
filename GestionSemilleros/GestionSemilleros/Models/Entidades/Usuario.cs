@@ -8,12 +8,12 @@ namespace GestionSemilleros.Models.Entidades
     public class Usuario
     {
         [Key]
-        public decimal IdUsuario { get; set; }
-        public decimal? IdSemillero { get; set; }
+        public int IdUsuario { get; set; }
+        public int? IdSemillero { get; set; }
         public string ContraseñaUsuario { get; set; }
         public string NombresUsuario { get; set; }
         public string RolUsuario { get; set; }
-        public decimal TelefonoUsuario { get; set; }
+        public int TelefonoUsuario { get; set; }
         public string CorreoUsuario { get; set; }
         public int EdadUsuario { get; set; }
         public string GeneroUsuario { get; set; }
