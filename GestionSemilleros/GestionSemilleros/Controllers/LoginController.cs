@@ -14,6 +14,8 @@ namespace GestionSemilleros.Controllers
         public ActionResult Index()
         {
             return View();
+
+
         }
 
         [HttpPost]
