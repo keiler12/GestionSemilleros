@@ -19,21 +19,26 @@ namespace GestionSemilleros.Controllers
         [HttpPost]
         public ActionResult Index(string correo, string contrasena)// Acción que maneja el inicio de sesión del usuario
         {
-            var usuario = baseDatos.Usuarios// Consulta a la tabla Usuarios para verificar las credenciales del usuario
-                .FirstOrDefault(registro => registro.CorreoUsuario == correo// Verifica si el correo y la contraseña coinciden con algún registro en la base de datos
-                             && registro.ContraseñaUsuario == contrasena);
+            var usuario = baseDatos.Usuarios
+           .FirstOrDefault(registro => registro.CorreoUsuario == correo
+                    && registro.ContraseñaUsuario == contrasena);
 
-            if (usuario == null)// Si no se encuentra un usuario con las credenciales proporcionadas, se muestra un mensaje de error, el null indica que no se encontró ningún registro que coincida con las credenciales proporcionadas
+            if (usuario == null)
             {
                 ViewBag.Error = "Correo o contraseña incorrectos.";
                 return View();
             }
-            // Si se encuentra un usuario con las credenciales proporcionadas, se almacenan algunos datos del usuario en la sesión para su uso posterior
+
+            if (usuario.EstadoUsuario == "Inactivo")
+            {
+                ViewBag.Error = "Tu cuenta está inactiva. Comunícate con el administrador.";
+                return View();
+            }
+
             Session["IdUsuario"] = usuario.IdUsuario;
             Session["Nombre"] = usuario.NombresUsuario;
             Session["Rol"] = usuario.RolUsuario;
 
-            // Redirige al usuario a la página correspondiente según su rol
             if (usuario.RolUsuario == "Administrador")
                 return RedirectToAction("Index", "Administrador");
             else if (usuario.RolUsuario == "Lider")

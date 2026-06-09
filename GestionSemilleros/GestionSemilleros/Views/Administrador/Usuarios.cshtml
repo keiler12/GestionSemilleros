@@ -1,6 +1,267 @@
-﻿@{
+﻿@model IEnumerable<GestionSemilleros.Models.Entidades.Usuario>
+@{
     ViewBag.Title = "Usuarios";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h4>Gestión de Usuarios</h4>
+<div class="encabezado-modulo">
+    <h4>Gestionar Usuarios</h4>
+    <button class="btn-registrar" data-bs-toggle="modal" data-bs-target="#modalRegistrar">
+        <i class="bi bi-plus-lg"></i> Registrar
+    </button>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombres</th>
+            <th>Correo</th>
+            <th>Rol</th>
+            <th>Semillero</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var usuario in Model)
+        {
+            <tr>
+                <td>@usuario.IdUsuario</td>
+                <td>@usuario.NombresUsuario</td>
+                <td>@usuario.CorreoUsuario</td>
+                <td>@usuario.RolUsuario</td>
+                <td>@(usuario.Semillero != null ? usuario.Semillero.NombreSemillero : "—")</td>
+                <td>
+                    @if (usuario.IdUsuario.ToString() != Session["IdUsuario"].ToString())
+                    {
+                        using (Html.BeginForm("CambiarEstado", "Administrador", FormMethod.Post, new { style = "display:inline" }))
+                        {
+                            @Html.Hidden("id", usuario.IdUsuario)
+                            <div class="form-check form-switch">
+                                <input class="form-check-input toggle-estado"
+                                       type="checkbox"
+                                       @(usuario.EstadoUsuario == "Activo" ? "checked" : "")
+                                       onchange="this.form.submit()" />
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <span style="font-size:12px; color:#2ecc71; font-weight:500;">
+                            <i class="bi bi-check-circle-fill"></i> Activo
+                        </span>
+                    }
+                </td>
+                <td class="acciones">
+                    <button class="btn-editar"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalEditar"
+                            data-id="@usuario.IdUsuario"
+                            data-nombres="@usuario.NombresUsuario"
+                            data-correo="@usuario.CorreoUsuario"
+                            data-contrasena="@usuario.ContraseñaUsuario"
+                            data-telefono="@usuario.TelefonoUsuario"
+                            data-rol="@usuario.RolUsuario"
+                            data-edad="@usuario.EdadUsuario"
+                            data-genero="@usuario.GeneroUsuario"
+                            data-semillero="@usuario.IdSemillero">
+                        <i class="bi bi-pencil-fill"></i> Editar
+                    </button>
+                    @if (usuario.IdUsuario.ToString() != Session["IdUsuario"].ToString())
+                    {
+                        using (Html.BeginForm("EliminarUsuario", "Administrador", FormMethod.Post, new { style = "display:inline" }))
+                        {
+                            @Html.Hidden("id", usuario.IdUsuario)
+                            <button type="submit" class="btn-eliminar"
+                                    onclick="return confirm('¿Estás seguro de eliminar este usuario?')">
+                                <i class="bi bi-trash-fill"></i> Eliminar
+                            </button>
+                        }
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Modal Registrar -->
+<div class="modal fade" id="modalRegistrar" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Registrar usuario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            @using (Html.BeginForm("RegistrarUsuario", "Administrador", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6 campo-form">
+                            <label>Nombres completos</label>
+                            <input type="text" name="NombresUsuario" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 campo-form">
+                            <label>Correo electrónico</label>
+                            <input type="text" name="CorreoUsuario" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 campo-form">
+                            <label>Contraseña</label>
+                            <input type="password" name="ContraseñaUsuario" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 campo-form">
+                            <label>Teléfono</label>
+                            <input type="text" name="TelefonoUsuario" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 campo-form">
+                            <label>Rol</label>
+                            <select name="RolUsuario" class="form-control" id="rolRegistrar" onchange="toggleSemilleroRegistrar()">
+                                <option value="">Selecciona...</option>
+                                <option value="Administrador">Administrador</option>
+                                <option value="Lider">Líder</option>
+                                <option value="Investigador">Investigador</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 campo-form">
+                            <label>Edad</label>
+                            <input type="number" name="EdadUsuario" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 campo-form">
+                            <label>Género</label>
+                            <select name="GeneroUsuario" class="form-control">
+                                <option value="">Selecciona...</option>
+                                <option>Masculino</option>
+                                <option>Femenino</option>
+                                <option>Otro</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 campo-form" id="semilleroRegistrar" style="display:none;">
+                            <label>Semillero</label>
+                            <select name="IdSemillero" class="form-control">
+                                <option value="">Selecciona un semillero...</option>
+                                @foreach (var semillero in ViewBag.Semilleros as IEnumerable<GestionSemilleros.Models.Entidades.Semillero>)
+                                {
+                                    <option value="@semillero.IdSemillero">@semillero.NombreSemillero</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn-guardar">Guardar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar -->
+<div class="modal fade" id="modalEditar" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editar usuario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            @using (Html.BeginForm("ModificarUsuario", "Administrador", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <input type="hidden" name="IdUsuario" id="editId" />
+                    <div class="row g-3">
+                        <div class="col-md-6 campo-form">
+                            <label>Nombres completos</label>
+                            <input type="text" name="NombresUsuario" id="editNombres" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 campo-form">
+                            <label>Correo electrónico</label>
+                            <input type="text" name="CorreoUsuario" id="editCorreo" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 campo-form">
+                            <label>Contraseña</label>
+                            <input type="password" name="ContraseñaUsuario" id="editContrasena" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 campo-form">
+                            <label>Teléfono</label>
+                            <input type="text" name="TelefonoUsuario" id="editTelefono" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 campo-form">
+                            <label>Rol</label>
+                            <select name="RolUsuario" id="editRol" class="form-control" onchange="toggleSemilleroEditar()">
+                                <option value="Administrador">Administrador</option>
+                                <option value="Lider">Líder</option>
+                                <option value="Investigador">Investigador</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 campo-form">
+                            <label>Edad</label>
+                            <input type="number" name="EdadUsuario" id="editEdad" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 campo-form">
+                            <label>Género</label>
+                            <select name="GeneroUsuario" id="editGenero" class="form-control">
+                                <option value="">Selecciona...</option>
+                                <option>Masculino</option>
+                                <option>Femenino</option>
+                                <option>Otro</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 campo-form" id="semilleroEditar" style="display:none;">
+                            <label>Semillero</label>
+                            <select name="IdSemillero" id="editSemillero" class="form-control">
+                                <option value="">Selecciona un semillero...</option>
+                                @foreach (var semillero in ViewBag.Semilleros as IEnumerable<GestionSemilleros.Models.Entidades.Semillero>)
+                                {
+                                    <option value="@semillero.IdSemillero">@semillero.NombreSemillero</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn-guardar">Guardar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+    function toggleSemilleroRegistrar() {
+        var rol = document.getElementById('rolRegistrar').value;
+        var campo = document.getElementById('semilleroRegistrar');
+        campo.style.display = (rol === 'Lider' || rol === 'Investigador') ? 'block' : 'none';
+    }
+
+    function toggleSemilleroEditar() {
+        var rol = document.getElementById('editRol').value;
+        var campo = document.getElementById('semilleroEditar');
+        campo.style.display = (rol === 'Lider' || rol === 'Investigador') ? 'block' : 'none';
+    }
+
+    document.getElementById('modalEditar').addEventListener('show.bs.modal', function (event) {
+        var boton = event.relatedTarget;
+        document.getElementById('editId').value = boton.getAttribute('data-id');
+        document.getElementById('editNombres').value = boton.getAttribute('data-nombres');
+        document.getElementById('editCorreo').value = boton.getAttribute('data-correo');
+        document.getElementById('editContrasena').value = boton.getAttribute('data-contrasena');
+        document.getElementById('editTelefono').value = boton.getAttribute('data-telefono');
+        document.getElementById('editEdad').value = boton.getAttribute('data-edad');
+
+        var rol = boton.getAttribute('data-rol');
+        var selectRol = document.getElementById('editRol');
+        selectRol.value = rol;
+        toggleSemilleroEditar();
+
+        var genero = boton.getAttribute('data-genero');
+        document.getElementById('editGenero').value = genero;
+
+        var idSemillero = boton.getAttribute('data-semillero');
+        if (idSemillero) {
+            document.getElementById('editSemillero').value = idSemillero;
+        }
+    });
+    </script>
+}

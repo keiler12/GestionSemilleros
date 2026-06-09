@@ -305,4 +305,83 @@ tbody td {
     .contenedor-principal {
         flex-direction: column;
     }
+
+
+    .panel-fases {
+        background: #f0f6fd;
+        border-radius: 12px;
+        padding: 1.25rem;
+        border: 0.5px solid #d1d5db;
+        margin-top: 1.5rem;
+    }
+
+    .panel-enc {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+    }
+
+        .panel-enc h5 {
+            font-size: 15px;
+            font-weight: 500;
+            color: #1a1a2e;
+            margin: 0;
+        }
+
+    .fase-item {
+        background: #fff;
+        border-radius: 8px;
+        border: 0.5px solid #d1d5db;
+        padding: 0.75rem 1rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .fase-enc {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .fase-nombre {
+        font-size: 13px;
+        font-weight: 500;
+        color: #1a1a2e;
+    }
+
+    .fase-duracion {
+        font-size: 11px;
+        color: #6b7280;
+        margin-top: 2px;
+    }
+
+    .actividades {
+        margin-top: 0.75rem;
+        padding-top: 0.75rem;
+        border-top: 0.5px solid #e5e7eb;
+    }
+
+    .actividad-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 6px 0;
+        font-size: 12px;
+        color: #6b7280;
+        border-bottom: 0.5px solid #f3f4f6;
+    }
+
+        .actividad-item:last-child {
+            border-bottom: none;
+        }
+
+    .badge-fecha {
+        background: #E6F1FB;
+        color: #185FA5;
+        font-size: 11px;
+        padding: 2px 8px;
+        border-radius: 20px;
+    }
 }
+
+

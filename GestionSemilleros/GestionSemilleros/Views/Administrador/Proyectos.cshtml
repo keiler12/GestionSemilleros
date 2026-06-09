@@ -1,0 +1,374 @@
+﻿@model IEnumerable<GestionSemilleros.Models.Entidades.Proyecto>
+@{
+    ViewBag.Title = "Proyectos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var proyectoActivo = ViewBag.ProyectoActivo as int?;
+}
+
+<div class="encabezado-modulo">
+    <h4>Gestionar Proyectos</h4>
+    <button class="btn-registrar" data-bs-toggle="modal" data-bs-target="#modalRegistrarProyecto">
+        <i class="bi bi-plus-lg"></i> Registrar
+    </button>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Semillero</th>
+            <th>Inicio</th>
+            <th>Fin</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var proyecto in Model)
+        {
+            <tr>
+                <td>@proyecto.IdProyecto</td>
+                <td>@proyecto.TituloProyecto</td>
+                <td>@proyecto.IdSemillero</td>
+                <td>@proyecto.FechaInicioProyecto.ToString("yyyy-MM-dd")</td>
+                <td>@proyecto.FechaFinProyecto.ToString("yyyy-MM-dd")</td>
+                <td class="acciones">
+                    <a href="@Url.Action("Proyectos", "Administrador", new { proyectoActivo = proyecto.IdProyecto })"
+                       class="btn-editar" style="background:#2ecc71;">
+                        <i class="bi bi-list-ul"></i> Fases
+                    </a>
+                    <button class="btn-editar"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalEditarProyecto"
+                            data-id="@proyecto.IdProyecto"
+                            data-titulo="@proyecto.TituloProyecto"
+                            data-objetivo="@proyecto.ObjetivoProyecto"
+                            data-descripcion="@proyecto.DescripcionProyecto"
+                            data-inicio="@proyecto.FechaInicioProyecto.ToString("yyyy-MM-dd")"
+                            data-fin="@proyecto.FechaFinProyecto.ToString("yyyy-MM-dd")"
+                            data-semillero="@proyecto.IdSemillero">
+                        <i class="bi bi-pencil-fill"></i> Editar
+                    </button>
+                    @using (Html.BeginForm("EliminarProyecto", "Administrador", FormMethod.Post, new { style = "display:inline" }))
+                    {
+                        @Html.Hidden("id", proyecto.IdProyecto)
+                        <button type="submit" class="btn-eliminar"
+                                onclick="return confirm('¿Estás seguro de eliminar este proyecto?')">
+                            <i class="bi bi-trash-fill"></i> Eliminar
+                        </button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (proyectoActivo.HasValue)
+{
+    var proyecto = Model.FirstOrDefault(p => p.IdProyecto == proyectoActivo.Value);
+    if (proyecto != null)
+    {
+        <div class="panel-fases">
+            <div class="panel-enc">
+                <h5>Fases de: @proyecto.TituloProyecto</h5>
+                <button class="btn-registrar" style="font-size:12px; padding:6px 14px;"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalRegistrarFase">
+                    <i class="bi bi-plus-lg"></i> Agregar fase
+                </button>
+            </div>
+
+            @foreach (var fase in proyecto.Fases)
+            {
+                <div class="fase-item">
+                    <div class="fase-enc">
+                        <div>
+                            <div class="fase-nombre">@fase.NombreFase</div>
+                            <div class="fase-duracion">Duración: @fase.DuracionFase</div>
+                        </div>
+                        <div class="acciones">
+                            <button class="btn-editar" style="background:#2ecc71; font-size:11px;"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalRegistrarActividad"
+                                    data-faseid="@fase.IdFase">
+                                <i class="bi bi-plus-lg"></i> Actividad
+                            </button>
+                            <button class="btn-editar" style="font-size:11px;"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalEditarFase"
+                                    data-id="@fase.IdFase"
+                                    data-nombre="@fase.NombreFase"
+                                    data-duracion="@fase.DuracionFase">
+                                <i class="bi bi-pencil-fill"></i>
+                            </button>
+                            @using (Html.BeginForm("EliminarFase", "Administrador", FormMethod.Post, new { style = "display:inline" }))
+                            {
+                                @Html.Hidden("id", fase.IdFase)
+                                @Html.Hidden("proyectoId", proyectoActivo.Value)
+                                <button type="submit" class="btn-eliminar" style="font-size:11px;"
+                                        onclick="return confirm('¿Eliminar esta fase?')">
+                                    <i class="bi bi-trash-fill"></i>
+                                </button>
+                            }
+                        </div>
+                    </div>
+
+                    @if (fase.Actividades.Any())
+                    {
+                        <div class="actividades">
+                            @foreach (var actividad in fase.Actividades)
+                            {
+                                <div class="actividad-item">
+                                    <span>@actividad.NombreActividad</span>
+                                    <div class="acciones">
+                                        <span class="badge-fecha">@actividad.FechaEntregaActividad.ToString("yyyy-MM-dd")</span>
+                                        @using (Html.BeginForm("EliminarActividad", "Administrador", FormMethod.Post, new { style = "display:inline" }))
+                                        {
+                                            @Html.Hidden("id", actividad.IdActividad)
+                                            @Html.Hidden("proyectoId", proyectoActivo.Value)
+                                            <button type="submit" class="btn-eliminar" style="font-size:11px; padding:2px 8px;"
+                                                    onclick="return confirm('¿Eliminar esta actividad?')">
+                                                <i class="bi bi-trash-fill"></i>
+                                            </button>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        <!-- Modal Registrar Fase -->
+        <div class="modal fade" id="modalRegistrarFase" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Agregar fase</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    @using (Html.BeginForm("RegistrarFase", "Administrador", FormMethod.Post))
+                    {
+                        @Html.Hidden("proyectoId", proyectoActivo.Value)
+                        <div class="modal-body">
+                            <div class="campo-form">
+                                <label>Nombre de la fase</label>
+                                <input type="text" name="NombreFase" class="form-control" required />
+                            </div>
+                            <div class="campo-form">
+                                <label>Duración</label>
+                                <input type="text" name="DuracionFase" class="form-control" placeholder="Ej: 2 semanas" required />
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn-guardar">Guardar</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Editar Fase -->
+        <div class="modal fade" id="modalEditarFase" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Editar fase</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    @using (Html.BeginForm("ModificarFase", "Administrador", FormMethod.Post))
+                    {
+                        @Html.Hidden("proyectoId", proyectoActivo.Value)
+                        <div class="modal-body">
+                            <input type="hidden" name="IdFase" id="editFaseId" />
+                            <div class="campo-form">
+                                <label>Nombre de la fase</label>
+                                <input type="text" name="NombreFase" id="editFaseNombre" class="form-control" required />
+                            </div>
+                            <div class="campo-form">
+                                <label>Duración</label>
+                                <input type="text" name="DuracionFase" id="editFaseDuracion" class="form-control" required />
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn-guardar">Guardar</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Registrar Actividad -->
+        <div class="modal fade" id="modalRegistrarActividad" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Agregar actividad</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    @using (Html.BeginForm("RegistrarActividad", "Administrador", FormMethod.Post))
+                    {
+                        @Html.Hidden("proyectoId", proyectoActivo.Value)
+                        <div class="modal-body">
+                            <input type="hidden" name="IdFase" id="actividadFaseId" />
+                            <div class="campo-form">
+                                <label>Nombre de la actividad</label>
+                                <input type="text" name="NombreActividad" class="form-control" required />
+                            </div>
+                            <div class="campo-form">
+                                <label>Duración</label>
+                                <input type="text" name="DuracionActividad" class="form-control" placeholder="Ej: 3 días" />
+                            </div>
+                            <div class="campo-form">
+                                <label>Fecha de entrega</label>
+                                <input type="date" name="FechaEntregaActividad" class="form-control" required />
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn-guardar">Guardar</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+}
+
+<!-- Modal Registrar Proyecto -->
+<div class="modal fade" id="modalRegistrarProyecto" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Registrar proyecto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            @using (Html.BeginForm("RegistrarProyecto", "Administrador", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6 campo-form">
+                            <label>Título del proyecto</label>
+                            <input type="text" name="TituloProyecto" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 campo-form">
+                            <label>Semillero</label>
+                            <select name="IdSemillero" class="form-control" required>
+                                <option value="">Selecciona...</option>
+                                @foreach (var semillero in ViewBag.Semilleros as IEnumerable<GestionSemilleros.Models.Entidades.Semillero>)
+                                {
+                                    <option value="@semillero.IdSemillero">@semillero.NombreSemillero</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-12 campo-form">
+                            <label>Objetivo</label>
+                            <input type="text" name="ObjetivoProyecto" class="form-control" required />
+                        </div>
+                        <div class="col-md-12 campo-form">
+                            <label>Descripción</label>
+                            <input type="text" name="DescripcionProyecto" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 campo-form">
+                            <label>Fecha inicio</label>
+                            <input type="date" name="FechaInicioProyecto" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 campo-form">
+                            <label>Fecha fin</label>
+                            <input type="date" name="FechaFinProyecto" class="form-control" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn-guardar">Guardar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar Proyecto -->
+<div class="modal fade" id="modalEditarProyecto" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editar proyecto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            @using (Html.BeginForm("ModificarProyecto", "Administrador", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <input type="hidden" name="IdProyecto" id="editProyectoId" />
+                    <div class="row g-3">
+                        <div class="col-md-6 campo-form">
+                            <label>Título del proyecto</label>
+                            <input type="text" name="TituloProyecto" id="editProyectoTitulo" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 campo-form">
+                            <label>Semillero</label>
+                            <select name="IdSemillero" id="editProyectoSemillero" class="form-control" required>
+                                <option value="">Selecciona...</option>
+                                @foreach (var semillero in ViewBag.Semilleros as IEnumerable<GestionSemilleros.Models.Entidades.Semillero>)
+                                {
+                                    <option value="@semillero.IdSemillero">@semillero.NombreSemillero</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-12 campo-form">
+                            <label>Objetivo</label>
+                            <input type="text" name="ObjetivoProyecto" id="editProyectoObjetivo" class="form-control" required />
+                        </div>
+                        <div class="col-md-12 campo-form">
+                            <label>Descripción</label>
+                            <input type="text" name="DescripcionProyecto" id="editProyectoDescripcion" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 campo-form">
+                            <label>Fecha inicio</label>
+                            <input type="date" name="FechaInicioProyecto" id="editProyectoInicio" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 campo-form">
+                            <label>Fecha fin</label>
+                            <input type="date" name="FechaFinProyecto" id="editProyectoFin" class="form-control" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn-guardar">Guardar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+    document.getElementById('modalEditarProyecto').addEventListener('show.bs.modal', function (event) {
+        var boton = event.relatedTarget;
+        document.getElementById('editProyectoId').value = boton.getAttribute('data-id');
+        document.getElementById('editProyectoTitulo').value = boton.getAttribute('data-titulo');
+        document.getElementById('editProyectoObjetivo').value = boton.getAttribute('data-objetivo');
+        document.getElementById('editProyectoDescripcion').value = boton.getAttribute('data-descripcion');
+        document.getElementById('editProyectoInicio').value = boton.getAttribute('data-inicio');
+        document.getElementById('editProyectoFin').value = boton.getAttribute('data-fin');
+        document.getElementById('editProyectoSemillero').value = boton.getAttribute('data-semillero');
+    });
+
+    document.getElementById('modalEditarFase').addEventListener('show.bs.modal', function (event) {
+        var boton = event.relatedTarget;
+        document.getElementById('editFaseId').value = boton.getAttribute('data-id');
+        document.getElementById('editFaseNombre').value = boton.getAttribute('data-nombre');
+        document.getElementById('editFaseDuracion').value = boton.getAttribute('data-duracion');
+    });
+
+    document.querySelectorAll('[data-bs-target="#modalRegistrarActividad"]').forEach(function(boton) {
+        boton.addEventListener('click', function() {
+            document.getElementById('actividadFaseId').value = this.getAttribute('data-faseid');
+        });
+    });
+    </script>
+}

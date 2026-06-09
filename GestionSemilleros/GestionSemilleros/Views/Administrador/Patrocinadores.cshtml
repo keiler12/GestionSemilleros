@@ -1,0 +1,145 @@
+﻿@model IEnumerable<GestionSemilleros.Models.Entidades.Patrocinador>
+@{
+    ViewBag.Title = "Patrocinadores";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="encabezado-modulo">
+    <h4>Gestionar Patrocinadores</h4>
+    <button class="btn-registrar" data-bs-toggle="modal" data-bs-target="#modalRegistrar">
+        <i class="bi bi-plus-lg"></i> Registrar
+    </button>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Tipo</th>
+            <th>Teléfono</th>
+            <th>Correo</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var patrocinador in Model)
+        {
+            <tr>
+                <td>@patrocinador.IdPatrocinador</td>
+                <td>@patrocinador.NombrePatrocinador</td>
+                <td>@patrocinador.TipoPatrocinador</td>
+                <td>@patrocinador.TelefonoPatrocinador</td>
+                <td>@patrocinador.CorreoPatrocinador</td>
+                <td class="acciones">
+                    <button class="btn-editar"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalEditar"
+                            data-id="@patrocinador.IdPatrocinador"
+                            data-nombre="@patrocinador.NombrePatrocinador"
+                            data-tipo="@patrocinador.TipoPatrocinador"
+                            data-telefono="@patrocinador.TelefonoPatrocinador"
+                            data-correo="@patrocinador.CorreoPatrocinador">
+                        <i class="bi bi-pencil-fill"></i> Editar
+                    </button>
+                    @using (Html.BeginForm("EliminarPatrocinador", "Administrador", FormMethod.Post, new { style = "display:inline" }))
+                    {
+                        @Html.Hidden("id", patrocinador.IdPatrocinador)
+                        <button type="submit" class="btn-eliminar"
+                                onclick="return confirm('¿Estás seguro de eliminar este patrocinador?')">
+                            <i class="bi bi-trash-fill"></i> Eliminar
+                        </button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Modal Registrar -->
+<div class="modal fade" id="modalRegistrar" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Registrar patrocinador</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            @using (Html.BeginForm("RegistrarPatrocinador", "Administrador", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <div class="campo-form">
+                        <label>Nombre</label>
+                        <input type="text" name="NombrePatrocinador" class="form-control" required />
+                    </div>
+                    <div class="campo-form">
+                        <label>Tipo</label>
+                        <input type="text" name="TipoPatrocinador" class="form-control" required />
+                    </div>
+                    <div class="campo-form">
+                        <label>Teléfono</label>
+                        <input type="text" name="TelefonoPatrocinador" class="form-control" required />
+                    </div>
+                    <div class="campo-form">
+                        <label>Correo</label>
+                        <input type="text" name="CorreoPatrocinador" class="form-control" required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn-guardar">Guardar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar -->
+<div class="modal fade" id="modalEditar" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editar patrocinador</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            @using (Html.BeginForm("ModificarPatrocinador", "Administrador", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <input type="hidden" name="IdPatrocinador" id="editId" />
+                    <div class="campo-form">
+                        <label>Nombre</label>
+                        <input type="text" name="NombrePatrocinador" id="editNombre" class="form-control" required />
+                    </div>
+                    <div class="campo-form">
+                        <label>Tipo</label>
+                        <input type="text" name="TipoPatrocinador" id="editTipo" class="form-control" required />
+                    </div>
+                    <div class="campo-form">
+                        <label>Teléfono</label>
+                        <input type="text" name="TelefonoPatrocinador" id="editTelefono" class="form-control" required />
+                    </div>
+                    <div class="campo-form">
+                        <label>Correo</label>
+                        <input type="text" name="CorreoPatrocinador" id="editCorreo" class="form-control" required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn-guardar">Guardar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+    document.getElementById('modalEditar').addEventListener('show.bs.modal', function (event) {
+        var boton = event.relatedTarget;
+        document.getElementById('editId').value = boton.getAttribute('data-id');
+        document.getElementById('editNombre').value = boton.getAttribute('data-nombre');
+        document.getElementById('editTipo').value = boton.getAttribute('data-tipo');
+        document.getElementById('editTelefono').value = boton.getAttribute('data-telefono');
+        document.getElementById('editCorreo').value = boton.getAttribute('data-correo');
+    });
+    </script>
+}

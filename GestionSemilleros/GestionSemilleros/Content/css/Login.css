@@ -35,14 +35,14 @@ html, body {
 }
 
     .marca h1 {
-        color: #fff;
-        font-size: 40px;
+        color: rgb(0, 0, 0);
+        font-size: 20px;
         font-weight: 600;
     }
 
     .marca p {
-        color: rgba(255,255,255,0.7);
-        font-size: 25px;
+        color: rgb(0, 0, 0);
+        font-size: 13px;
     }
 
 .tarjeta-login {

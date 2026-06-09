@@ -1,0 +1,185 @@
+﻿@model IEnumerable<GestionSemilleros.Models.Entidades.Reunion>
+@{
+    ViewBag.Title = "Reuniones";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="encabezado-modulo">
+    <h4>Gestionar Reuniones</h4>
+    <button class="btn-registrar" data-bs-toggle="modal" data-bs-target="#modalRegistrar">
+        <i class="bi bi-plus-lg"></i> Registrar
+    </button>
+    @if (TempData["Error"] != null)
+    {
+        <div class="mensaje-error" style="margin-bottom:1rem;">
+            <i class="bi bi-exclamation-circle-fill"></i> @TempData["Error"]
+        </div>
+    }
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Usuario</th>
+            <th>Tipo</th>
+            <th>Motivo</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var reunion in Model)
+        {
+            <tr>
+                <td>@reunion.IdReunion</td>
+                <td>@string.Join(", ", reunion.Usuarios.Select(u => u.NombresUsuario))</td>
+                <td>@reunion.TipoReunion</td>
+                <td>@reunion.MotivoReunion</td>
+                <td>@reunion.FechaReunion.ToString("yyyy-MM-dd")</td>
+                <td>@reunion.HoraReunion.ToString(@"hh\:mm")</td>
+                <td class="acciones">
+                    <button class="btn-editar"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalEditar"
+                            data-id="@reunion.IdReunion"
+                            
+                            data-tipo="@reunion.TipoReunion"
+                            data-motivo="@reunion.MotivoReunion"
+                            data-fecha="@reunion.FechaReunion.ToString("yyyy-MM-dd")"
+                            data-hora="@reunion.HoraReunion.ToString(@"hh\:mm")">
+                        <i class="bi bi-pencil-fill"></i> Editar
+                    </button>
+                    @using (Html.BeginForm("EliminarReunion", "Administrador", FormMethod.Post, new { style = "display:inline" }))
+                    {
+                        @Html.Hidden("id", reunion.IdReunion)
+                        <button type="submit" class="btn-eliminar"
+                                onclick="return confirm('¿Estás seguro de eliminar esta reunión?')">
+                            <i class="bi bi-trash-fill"></i> Eliminar
+                        </button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Modal Registrar -->
+<div class="modal fade" id="modalRegistrar" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Registrar reunión</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            @using (Html.BeginForm("RegistrarReunion", "Administrador", FormMethod.Post))
+            {
+                <div class="campo-form">
+                    <label>Usuarios <small style="color:#6b7280;">(mantén Ctrl para seleccionar varios)</small></label>
+                    <select name="UsuariosIds" class="form-control" multiple style="height: 150px;">
+                        @foreach (var usuario in ViewBag.Usuarios as IEnumerable<GestionSemilleros.Models.Entidades.Usuario>)
+                        {
+                            <option value="@usuario.IdUsuario">@usuario.NombresUsuario</option>
+                        }
+                    </select>
+                </div>
+                    <div class="campo-form">
+                        <label>Tipo de reunión</label>
+                        <input type="text" name="TipoReunion" class="form-control" required />
+                    </div>
+                    <div class="campo-form">
+                        <label>Motivo</label>
+                        <input type="text" name="MotivoReunion" class="form-control" required />
+                    </div>
+                    <div class="campo-form">
+                        <label>Fecha</label>
+                        <input type="date" name="FechaReunion" class="form-control" required />
+                    </div>
+                    <div class="col-md-6 campo-form">
+                        <label>Hora <span style="color:red">*</span></label>
+                        <select name="HoraReunion" class="form-control" required>
+                            <option value="">Selecciona una hora...</option>
+                            <option value="07:00:00">07:00</option>
+                            <option value="08:00:00">08:00</option>
+                            <option value="09:00:00">09:00</option>
+                            <option value="10:00:00">10:00</option>
+                            <option value="11:00:00">11:00</option>
+                            <option value="13:00:00">13:00</option>
+                            <option value="14:00:00">14:00</option>
+                            <option value="15:00:00">15:00</option>
+                            <option value="16:00:00">16:00</option>
+                            <option value="17:00:00">17:00</option>
+                        </select>
+                    </div>
+               
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn-guardar">Guardar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar -->
+<div class="modal fade" id="modalEditar" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editar reunión</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            @using (Html.BeginForm("ModificarReunion", "Administrador", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <input type="hidden" name="IdReunion" id="editId" />
+                    <div class="campo-form">
+                        <label>Usuario</label>
+                        <select name="IdUsuario" id="editUsuario" class="form-control" required>
+                            <option value="">Selecciona...</option>
+                            @foreach (var usuario in ViewBag.Usuarios as IEnumerable<GestionSemilleros.Models.Entidades.Usuario>)
+                            {
+                                <option value="@usuario.IdUsuario">@usuario.NombresUsuario</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="campo-form">
+                        <label>Tipo de reunión</label>
+                        <input type="text" name="TipoReunion" id="editTipo" class="form-control" required />
+                    </div>
+                    <div class="campo-form">
+                        <label>Motivo</label>
+                        <input type="text" name="MotivoReunion" id="editMotivo" class="form-control" required />
+                    </div>
+                    <div class="campo-form">
+                        <label>Fecha</label>
+                        <input type="date" name="FechaReunion" id="editFecha" class="form-control" required />
+                    </div>
+                    <div class="campo-form">
+                        <label>Hora</label>
+                        <input type="time" name="HoraReunion" id="editHora" class="form-control" required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn-guardar">Guardar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+    document.getElementById('modalEditar').addEventListener('show.bs.modal', function (event) {
+        var boton = event.relatedTarget;
+        document.getElementById('editId').value = boton.getAttribute('data-id');
+        document.getElementById('editUsuario').value = boton.getAttribute('data-usuario');
+        document.getElementById('editTipo').value = boton.getAttribute('data-tipo');
+        document.getElementById('editMotivo').value = boton.getAttribute('data-motivo');
+        document.getElementById('editFecha').value = boton.getAttribute('data-fecha');
+        document.getElementById('editHora').value = boton.getAttribute('data-hora');
+    });
+    </script>
+}

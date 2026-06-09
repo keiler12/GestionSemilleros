@@ -134,6 +134,18 @@
     <Compile Include="Migrations\202606050412113_Inicial.Designer.cs">
       <DependentUpon>202606050412113_Inicial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202606080438020_ReunionMuchosAMuchos.cs" />
+    <Compile Include="Migrations\202606080438020_ReunionMuchosAMuchos.Designer.cs">
+      <DependentUpon>202606080438020_ReunionMuchosAMuchos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202606080457069_ReunionFinal.cs" />
+    <Compile Include="Migrations\202606080457069_ReunionFinal.Designer.cs">
+      <DependentUpon>202606080457069_ReunionFinal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202606090400489_AgregarEstadoReunion.cs" />
+    <Compile Include="Migrations\202606090400489_AgregarEstadoReunion.Designer.cs">
+      <DependentUpon>202606090400489_AgregarEstadoReunion.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Entidades\Actividad.cs" />
     <Compile Include="Models\Entidades\Evento.cs" />
@@ -204,6 +216,10 @@
     <Content Include="Views\Administrador\Usuarios.cshtml" />
     <Content Include="Views\Administrador\Semilleros.cshtml" />
     <Content Include="Views\Administrador\Index.cshtml" />
+    <Content Include="Views\Administrador\Proyectos.cshtml" />
+    <Content Include="Views\Administrador\Eventos.cshtml" />
+    <Content Include="Views\Administrador\Patrocinadores.cshtml" />
+    <Content Include="Views\Administrador\Reuniones.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -238,6 +254,15 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202606050412113_Inicial.resx">
       <DependentUpon>202606050412113_Inicial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202606080438020_ReunionMuchosAMuchos.resx">
+      <DependentUpon>202606080438020_ReunionMuchosAMuchos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202606080457069_ReunionFinal.resx">
+      <DependentUpon>202606080457069_ReunionFinal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202606090400489_AgregarEstadoReunion.resx">
+      <DependentUpon>202606090400489_AgregarEstadoReunion.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

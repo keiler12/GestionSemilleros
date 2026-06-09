@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -9,13 +10,12 @@ namespace GestionSemilleros.Models.Entidades
     {
         [Key]
         public int IdReunion { get; set; }
-        public int IdUsuario { get; set; }
         public string TipoReunion { get; set; }
         public TimeSpan HoraReunion { get; set; }
         public string MotivoReunion { get; set; }
         public DateTime FechaReunion { get; set; }
+        public string EstadoReunion { get; set; }
 
-        [ForeignKey("IdUsuario")]
-        public virtual Usuario Usuario { get; set; }
+        public virtual ICollection<Usuario> Usuarios { get; set; }
     }
 }

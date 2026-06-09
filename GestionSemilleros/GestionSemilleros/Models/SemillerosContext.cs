@@ -55,6 +55,16 @@ namespace GestionSemilleros.Models.DAO
                 });
 
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Reunion>()
+            .HasMany(reunion => reunion.Usuarios)
+            .WithMany(usuario => usuario.Reuniones)
+            .Map(mapa =>
+            {
+                mapa.ToTable("ReunionUsuarios");
+                mapa.MapLeftKey("idReunion");
+                mapa.MapRightKey("idUsuario");
+            });
         }
     }
 }
