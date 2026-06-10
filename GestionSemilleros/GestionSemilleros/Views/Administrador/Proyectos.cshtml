@@ -121,7 +121,7 @@
                                 <div class="actividad-item">
                                     <span>@actividad.NombreActividad</span>
                                     <div class="acciones">
-                                        <span class="badge-fecha">@actividad.FechaEntregaActividad.ToString("yyyy-MM-dd")</span>
+                                        <span class="badge-fecha">Entrega: @actividad.FechaEntregaActividad.ToString("yyyy-MM-dd")</span>
                                         @using (Html.BeginForm("EliminarActividad", "Administrador", FormMethod.Post, new { style = "display:inline" }))
                                         {
                                             @Html.Hidden("id", actividad.IdActividad)
@@ -157,8 +157,14 @@
                                 <input type="text" name="NombreFase" class="form-control" required />
                             </div>
                             <div class="campo-form">
-                                <label>Duración</label>
-                                <input type="text" name="DuracionFase" class="form-control" placeholder="Ej: 2 semanas" required />
+                                <label>Duración <small style="color:#6b7280;">(@ViewBag.SemanasDisponibles semanas disponibles)</small></label>
+                                <select name="DuracionFase" class="form-control" required>
+                                    <option value="">Selecciona...</option>
+                                    @for (int i = 1; i <= (int)(ViewBag.SemanasDisponibles ?? 0); i++)
+                                    {
+                                        <option value="@i">@i semana@(i > 1 ? "s" : "")</option>
+                                    }
+                                </select>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -188,8 +194,14 @@
                                 <input type="text" name="NombreFase" id="editFaseNombre" class="form-control" required />
                             </div>
                             <div class="campo-form">
-                                <label>Duración</label>
-                                <input type="text" name="DuracionFase" id="editFaseDuracion" class="form-control" required />
+                                <label>Duración <small style="color:#6b7280;">(@ViewBag.SemanasTotal semanas totales del proyecto)</small></label>
+                                <select name="DuracionFase" class="form-control" required>
+                                    <option value="">Selecciona...</option>
+                                    @for (int i = 1; i <= (int)(ViewBag.SemanasTotal ?? 0); i++)
+                                    {
+                                        <option value="@i">@i semana@(i > 1 ? "s" : "")</option>
+                                    }
+                                </select>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -212,21 +224,27 @@
                     @using (Html.BeginForm("RegistrarActividad", "Administrador", FormMethod.Post))
                     {
                         @Html.Hidden("proyectoId", proyectoActivo.Value)
-                        <div class="modal-body">
-                            <input type="hidden" name="IdFase" id="actividadFaseId" />
-                            <div class="campo-form">
-                                <label>Nombre de la actividad</label>
-                                <input type="text" name="NombreActividad" class="form-control" required />
-                            </div>
-                            <div class="campo-form">
-                                <label>Duración</label>
-                                <input type="text" name="DuracionActividad" class="form-control" placeholder="Ej: 3 días" />
-                            </div>
-                            <div class="campo-form">
-                                <label>Fecha de entrega</label>
-                                <input type="date" name="FechaEntregaActividad" class="form-control" required />
-                            </div>
-                        </div>
+                <div class="modal-body">
+                    <input type="hidden" name="IdFase" id="actividadFaseId" />
+                    <div class="campo-form">
+                        <label>Nombre de la actividad</label>
+                        <input type="text" name="NombreActividad" class="form-control" required />
+                    </div>
+                    <div class="campo-form">
+                        <label>Duración en días <small style="color:#6b7280;">(fecha de entrega se calcula automáticamente)</small></label>
+                        <select name="DuracionActividad" class="form-control" required>
+                            <option value="">Selecciona...</option>
+                            @{
+                                var diasDisponibles = ViewBag.DiasDisponiblesPorFase as Dictionary<int, int>;
+                                int diasFase = diasDisponibles != null ? diasDisponibles.Values.FirstOrDefault() : 0;
+                            }
+                            @for (int i = 1; i <= diasFase; i++)
+                            {
+                                <option value="@i">@i día@(i > 1 ? "s" : "")</option>
+                            }
+                        </select>
+                    </div>
+                </div>
                         <div class="modal-footer">
                             <button type="button" class="btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
                             <button type="submit" class="btn-guardar">Guardar</button>
@@ -291,6 +309,8 @@
     </div>
 </div>
 
+
+
 <!-- Modal Editar Proyecto -->
 <div class="modal fade" id="modalEditarProyecto" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -347,28 +367,45 @@
 
 @section Scripts {
     <script>
-    document.getElementById('modalEditarProyecto').addEventListener('show.bs.modal', function (event) {
-        var boton = event.relatedTarget;
-        document.getElementById('editProyectoId').value = boton.getAttribute('data-id');
-        document.getElementById('editProyectoTitulo').value = boton.getAttribute('data-titulo');
-        document.getElementById('editProyectoObjetivo').value = boton.getAttribute('data-objetivo');
-        document.getElementById('editProyectoDescripcion').value = boton.getAttribute('data-descripcion');
-        document.getElementById('editProyectoInicio').value = boton.getAttribute('data-inicio');
-        document.getElementById('editProyectoFin').value = boton.getAttribute('data-fin');
-        document.getElementById('editProyectoSemillero').value = boton.getAttribute('data-semillero');
-    });
-
-    document.getElementById('modalEditarFase').addEventListener('show.bs.modal', function (event) {
-        var boton = event.relatedTarget;
-        document.getElementById('editFaseId').value = boton.getAttribute('data-id');
-        document.getElementById('editFaseNombre').value = boton.getAttribute('data-nombre');
-        document.getElementById('editFaseDuracion').value = boton.getAttribute('data-duracion');
-    });
-
-    document.querySelectorAll('[data-bs-target="#modalRegistrarActividad"]').forEach(function(boton) {
-        boton.addEventListener('click', function() {
-            document.getElementById('actividadFaseId').value = this.getAttribute('data-faseid');
+        document.getElementById('modalEditarProyecto').addEventListener('show.bs.modal', function (event) {
+            var boton = event.relatedTarget;
+            document.getElementById('editProyectoId').value = boton.getAttribute('data-id');
+            document.getElementById('editProyectoTitulo').value = boton.getAttribute('data-titulo');
+            document.getElementById('editProyectoObjetivo').value = boton.getAttribute('data-objetivo');
+            document.getElementById('editProyectoDescripcion').value = boton.getAttribute('data-descripcion');
+            document.getElementById('editProyectoInicio').value = boton.getAttribute('data-inicio');
+            document.getElementById('editProyectoFin').value = boton.getAttribute('data-fin');
+            document.getElementById('editProyectoSemillero').value = boton.getAttribute('data-semillero');
         });
+
+        document.getElementById('modalEditarFase').addEventListener('show.bs.modal', function (event) {
+            var boton = event.relatedTarget;
+            document.getElementById('editFaseId').value = boton.getAttribute('data-id');
+            document.getElementById('editFaseNombre').value = boton.getAttribute('data-nombre');
+            document.getElementById('editFaseDuracion').value = boton.getAttribute('data-duracion');
+        });
+
+        document.querySelectorAll('[data-bs-target="#modalRegistrarActividad"]').forEach(function (boton) {
+            boton.addEventListener('click', function () {
+                document.getElementById('actividadFaseId').value = this.getAttribute('data-faseid');
+            });
+        });
+        function registrarProyecto() {
+    var datos = new URLSearchParams(new FormData(document.getElementById('formRegistrarProyecto')));
+    fetch('@Url.Action("RegistrarProyecto", "Administrador")', {
+        method: 'POST',
+        body: datos
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.exito) window.location.reload();
+        else {
+            document.getElementById('textoErrorProyecto').textContent = data.mensaje;
+            document.getElementById('errorRegistrarProyecto').style.display = 'block';
+        }
     });
+}
     </script>
+
+
 }

@@ -146,6 +146,10 @@
     <Compile Include="Migrations\202606090400489_AgregarEstadoReunion.Designer.cs">
       <DependentUpon>202606090400489_AgregarEstadoReunion.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202606100331008_DuracionFaseAInt.cs" />
+    <Compile Include="Migrations\202606100331008_DuracionFaseAInt.Designer.cs">
+      <DependentUpon>202606100331008_DuracionFaseAInt.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Entidades\Actividad.cs" />
     <Compile Include="Models\Entidades\Evento.cs" />
@@ -263,6 +267,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202606090400489_AgregarEstadoReunion.resx">
       <DependentUpon>202606090400489_AgregarEstadoReunion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202606100331008_DuracionFaseAInt.resx">
+      <DependentUpon>202606100331008_DuracionFaseAInt.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -11,7 +11,7 @@ namespace GestionSemilleros.Models.Entidades
         public int IdFase { get; set; }
         public int IdProyecto { get; set; }
         public string NombreFase { get; set; }
-        public string DuracionFase { get; set; }
+        public int DuracionFase { get; set; }
 
         [ForeignKey("IdProyecto")]
         public virtual Proyecto Proyecto { get; set; }

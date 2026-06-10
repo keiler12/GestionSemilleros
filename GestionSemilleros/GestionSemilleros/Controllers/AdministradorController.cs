@@ -138,25 +138,85 @@ namespace GestionSemilleros.Controllers
 
         // ==================== PROYECTOS ====================
 
-        public ActionResult Proyectos(int? proyectoActivo)// Recibe un parámetro opcional proyectoActivo que indica el ID del proyecto que se desea resaltar como activo en la vista
+        public ActionResult Proyectos(int? proyectoActivo)
         {
-            if (Session["Rol"] == null || Session["Rol"].ToString() != "Administrador")// Verifica si el usuario no ha iniciado sesión o no tiene el rol de "Administrador"
+            if (Session["Rol"] == null || Session["Rol"].ToString() != "Administrador")
                 return RedirectToAction("Index", "Login");
 
             ViewBag.MenuActivo = "Proyectos";
             ViewBag.Semilleros = baseDatos.Semilleros.ToList();
             ViewBag.ProyectoActivo = proyectoActivo;
+            ViewBag.SemanasDisponibles = 0;
+            ViewBag.SemanasTotal = 0;
+
             var listaProyectos = baseDatos.Proyectos
                 .Include("Fases.Actividades")
                 .ToList();
-            return View(listaProyectos);
-        }
 
+            if (proyectoActivo.HasValue)
+            {
+                var proyecto = listaProyectos.FirstOrDefault(p => p.IdProyecto == proyectoActivo.Value);
+                if (proyecto != null)
+                {
+                    var diasProyecto = (proyecto.FechaFinProyecto - proyecto.FechaInicioProyecto).TotalDays;
+                    var semanasTotal = (int)(diasProyecto / 7);
+                    var semanasUsadas = proyecto.Fases.Sum(f => f.DuracionFase);
+                    ViewBag.SemanasDisponibles = semanasTotal - semanasUsadas;
+                    ViewBag.SemanasTotal = semanasTotal;
+                }
+            }
+            // Calcular días disponibles por fase
+            var diasDisponiblesPorFase = new Dictionary<int, int>();
+            if (proyectoActivo.HasValue)
+            {
+                var proyecto = listaProyectos.FirstOrDefault(p => p.IdProyecto == proyectoActivo.Value);
+                if (proyecto != null)
+                {
+                    foreach (var fase in proyecto.Fases)
+                    {
+                        var diasTotalesFase = fase.DuracionFase * 7;
+                        var diasUsados = fase.Actividades.Sum(a => string.IsNullOrEmpty(a.DuracionActividad) ? 0 : int.Parse(a.DuracionActividad));
+                        diasDisponiblesPorFase[fase.IdFase] = diasTotalesFase - diasUsados;
+                    }
+                }
+            }
+            ViewBag.DiasDisponiblesPorFase = diasDisponiblesPorFase;
+
+            return View(listaProyectos);
+
+
+        }
         [HttpPost]
         public ActionResult RegistrarProyecto(Proyecto proyecto)
         {
-            
-            
+            var hoy = DateTime.Today;
+            var maxFecha = hoy.AddMonths(2);
+
+            if (proyecto.FechaInicioProyecto < hoy)
+            {
+                TempData["Error"] = "La fecha de inicio no puede ser en el pasado.";
+                return RedirectToAction("Proyectos");
+            }
+
+            if (proyecto.FechaFinProyecto > maxFecha)
+            {
+                TempData["Error"] = "La fecha de fin no puede ser mayor a 2 meses desde hoy.";
+                return RedirectToAction("Proyectos");
+            }
+
+            var diferenciaDias = (proyecto.FechaFinProyecto - proyecto.FechaInicioProyecto).TotalDays;
+            if (diferenciaDias < 20)
+            {
+                TempData["Error"] = "La diferencia entre fechas debe ser mínimo 20 días.";
+                return RedirectToAction("Proyectos");
+            }
+
+            if (proyecto.FechaFinProyecto <= proyecto.FechaInicioProyecto)
+            {
+                TempData["Error"] = "La fecha de fin debe ser mayor que la fecha de inicio.";
+                return RedirectToAction("Proyectos");
+            }
+
             baseDatos.Proyectos.Add(proyecto);
             baseDatos.SaveChanges();
             return RedirectToAction("Proyectos");
@@ -229,11 +289,31 @@ namespace GestionSemilleros.Controllers
         }
 
         // ==================== ACTIVIDADES ====================
-
         [HttpPost]
         public ActionResult RegistrarActividad(Actividad actividad, int proyectoId)
         {
-            
+            var fase = baseDatos.Fases
+                .Include("Actividades")
+                .Include("Proyecto")
+                .FirstOrDefault(f => f.IdFase == actividad.IdFase);
+
+            if (fase != null)
+            {
+                var diasTotalesFase = fase.DuracionFase * 7;
+                var diasUsados = fase.Actividades
+                    .Sum(a => string.IsNullOrEmpty(a.DuracionActividad) ? 0 : int.Parse(a.DuracionActividad));
+                var diasDisponibles = diasTotalesFase - diasUsados;
+
+                if (int.Parse(actividad.DuracionActividad) > diasDisponibles)
+                {
+                    TempData["Error"] = $"Solo hay {diasDisponibles} días disponibles en esta fase.";
+                    return RedirectToAction("Proyectos", new { proyectoActivo = proyectoId });
+                }
+
+                actividad.FechaEntregaActividad = fase.Proyecto.FechaInicioProyecto
+                    .AddDays(diasUsados + int.Parse(actividad.DuracionActividad));
+            }
+
             baseDatos.Actividades.Add(actividad);
             baseDatos.SaveChanges();
             return RedirectToAction("Proyectos", new { proyectoActivo = proyectoId });
@@ -542,9 +622,12 @@ namespace GestionSemilleros.Controllers
         [HttpPost]
         public ActionResult EliminarReunion(int id)
         {
-            var registro = baseDatos.Reuniones.Find(id);
+            var registro = baseDatos.Reuniones
+            .Include("Usuarios")
+            .FirstOrDefault(r => r.IdReunion == id);
             if (registro != null)
             {
+                registro.Usuarios.Clear();
                 baseDatos.Reuniones.Remove(registro);
                 baseDatos.SaveChanges();
             }
