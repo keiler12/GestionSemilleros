@@ -69,7 +69,7 @@ namespace GestionSemilleros.Controllers
         }
 
 
-        // ==================== USUARIOS ====================
+        //USUARIOS 
 
         public ActionResult Usuarios()
         {
@@ -190,7 +190,43 @@ namespace GestionSemilleros.Controllers
         public ActionResult RegistrarProyecto(Proyecto proyecto)
         {
             var hoy = DateTime.Today;
-            var maxFecha = hoy.AddMonths(2);
+            var maxFecha = hoy.AddMonths(12);
+
+            if (proyecto.FechaInicioProyecto < hoy)
+            {
+                TempData["Error"] = "La fecha de inicio no puede ser en el pasado.";
+                return RedirectToAction("Proyectos");
+            }
+
+            if (proyecto.FechaFinProyecto > maxFecha)
+            {
+                TempData["Error"] = "La fecha de fin no puede ser mayor a 12 meses desde hoy.";
+                return RedirectToAction("Proyectos");
+            }
+
+            var diferenciaDias = (proyecto.FechaFinProyecto - proyecto.FechaInicioProyecto).TotalDays;
+            if (diferenciaDias < 20)
+            {
+                TempData["Error"] = "La diferencia entre fechas debe ser mínimo 20 días.";
+                return RedirectToAction("Proyectos");
+            }
+
+            if (proyecto.FechaFinProyecto <= proyecto.FechaInicioProyecto)
+            {
+                TempData["Error"] = "La fecha de fin debe ser mayor que la fecha de inicio.";
+                return RedirectToAction("Proyectos");
+            }
+
+            baseDatos.Proyectos.Add(proyecto);
+            baseDatos.SaveChanges();
+            return RedirectToAction("Proyectos");
+        }
+
+        [HttpPost]
+        public ActionResult ModificarProyecto(Proyecto proyecto)
+        {
+            var hoy = DateTime.Today;
+            var maxFecha = hoy.AddMonths(12);
 
             if (proyecto.FechaInicioProyecto < hoy)
             {
@@ -217,14 +253,6 @@ namespace GestionSemilleros.Controllers
                 return RedirectToAction("Proyectos");
             }
 
-            baseDatos.Proyectos.Add(proyecto);
-            baseDatos.SaveChanges();
-            return RedirectToAction("Proyectos");
-        }
-
-        [HttpPost]
-        public ActionResult ModificarProyecto(Proyecto proyecto)
-        {
             var registro = baseDatos.Proyectos.Find(proyecto.IdProyecto);
             if (registro != null)
             {
@@ -421,7 +449,7 @@ namespace GestionSemilleros.Controllers
                 evento.Proyectos.Remove(proyecto);
                 baseDatos.SaveChanges();
             }
-            return RedirectToAction("Eventos", new { eventoActivo = eventoId });
+            return RedirectToAction("Eventos", new { eventoActivo = eventoId});
         }
 
         [HttpPost]
@@ -516,7 +544,9 @@ namespace GestionSemilleros.Controllers
                 return RedirectToAction("Index", "Login");
 
             ViewBag.MenuActivo = "Reuniones";
-            ViewBag.Usuarios = baseDatos.Usuarios.ToList();
+            ViewBag.Usuarios = baseDatos.Usuarios
+             .Where(u => u.RolUsuario == "Lider" || u.RolUsuario == "Investigador")
+             .ToList();
             var listaReuniones = baseDatos.Reuniones
                 .Include("Usuarios")
                 .ToList();
@@ -584,6 +614,26 @@ namespace GestionSemilleros.Controllers
                 return RedirectToAction("Reuniones");
             }
 
+            var hayLider = baseDatos.Usuarios
+                .Where(u => UsuariosIds.Contains(u.IdUsuario) && u.RolUsuario == "Lider")
+                .Any();
+
+            if (!hayLider)
+            {
+                TempData["Error"] = "La reunión debe tener al menos un líder encargado.";
+                return RedirectToAction("Reuniones");
+            }
+
+            // Verificar que haya al menos un investigador
+            var hayInvestigador = baseDatos.Usuarios
+                .Where(u => UsuariosIds.Contains(u.IdUsuario) && u.RolUsuario == "Investigador")
+                .Any();
+
+            if (!hayInvestigador)
+            {
+                TempData["Error"] = "La reunión debe tener al menos un investigador además del líder.";
+                return RedirectToAction("Reuniones");
+            }
             reunion.EstadoReunion = "Pendiente";
             baseDatos.Reuniones.Add(reunion);
             baseDatos.SaveChanges();

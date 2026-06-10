@@ -4,17 +4,18 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@if (TempData["Error"] != null)
+{
+    <div class="mensaje-error" style="margin-bottom:1rem;">
+        <i class="bi bi-exclamation-circle-fill"></i> @TempData["Error"]
+    </div>
+}
 <div class="encabezado-modulo">
     <h4>Gestionar Reuniones</h4>
     <button class="btn-registrar" data-bs-toggle="modal" data-bs-target="#modalRegistrar">
         <i class="bi bi-plus-lg"></i> Registrar
     </button>
-    @if (TempData["Error"] != null)
-    {
-        <div class="mensaje-error" style="margin-bottom:1rem;">
-            <i class="bi bi-exclamation-circle-fill"></i> @TempData["Error"]
-        </div>
-    }
+
 </div>
 
 <table>
@@ -44,7 +45,6 @@
                             data-bs-toggle="modal"
                             data-bs-target="#modalEditar"
                             data-id="@reunion.IdReunion"
-                            
                             data-tipo="@reunion.TipoReunion"
                             data-motivo="@reunion.MotivoReunion"
                             data-fecha="@reunion.FechaReunion.ToString("yyyy-MM-dd")"
@@ -84,35 +84,35 @@
                         }
                     </select>
                 </div>
-                    <div class="campo-form">
-                        <label>Tipo de reunión</label>
-                        <input type="text" name="TipoReunion" class="form-control" required />
-                    </div>
-                    <div class="campo-form">
-                        <label>Motivo</label>
-                        <input type="text" name="MotivoReunion" class="form-control" required />
-                    </div>
-                    <div class="campo-form">
-                        <label>Fecha</label>
-                        <input type="date" name="FechaReunion" class="form-control" required />
-                    </div>
-                    <div class="col-md-6 campo-form">
-                        <label>Hora <span style="color:red">*</span></label>
-                        <select name="HoraReunion" class="form-control" required>
-                            <option value="">Selecciona una hora...</option>
-                            <option value="07:00:00">07:00</option>
-                            <option value="08:00:00">08:00</option>
-                            <option value="09:00:00">09:00</option>
-                            <option value="10:00:00">10:00</option>
-                            <option value="11:00:00">11:00</option>
-                            <option value="13:00:00">13:00</option>
-                            <option value="14:00:00">14:00</option>
-                            <option value="15:00:00">15:00</option>
-                            <option value="16:00:00">16:00</option>
-                            <option value="17:00:00">17:00</option>
-                        </select>
-                    </div>
-               
+                <div class="campo-form">
+                    <label>Tipo de reunión</label>
+                    <input type="text" name="TipoReunion" class="form-control" required />
+                </div>
+                <div class="campo-form">
+                    <label>Motivo</label>
+                    <input type="text" name="MotivoReunion" class="form-control" required />
+                </div>
+                <div class="campo-form">
+                    <label>Fecha</label>
+                    <input type="date" name="FechaReunion" class="form-control" required />
+                </div>
+                <div class="col-md-6 campo-form">
+                    <label>Hora <span style="color:red">*</span></label>
+                    <select name="HoraReunion" class="form-control" required>
+                        <option value="">Selecciona una hora...</option>
+                        <option value="07:00:00">07:00</option>
+                        <option value="08:00:00">08:00</option>
+                        <option value="09:00:00">09:00</option>
+                        <option value="10:00:00">10:00</option>
+                        <option value="11:00:00">11:00</option>
+                        <option value="13:00:00">13:00</option>
+                        <option value="14:00:00">14:00</option>
+                        <option value="15:00:00">15:00</option>
+                        <option value="16:00:00">16:00</option>
+                        <option value="17:00:00">17:00</option>
+                    </select>
+                </div>
+
                 <div class="modal-footer">
                     <button type="button" class="btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
                     <button type="submit" class="btn-guardar">Guardar</button>
@@ -172,14 +172,14 @@
 
 @section Scripts {
     <script>
-    document.getElementById('modalEditar').addEventListener('show.bs.modal', function (event) {
-        var boton = event.relatedTarget;
-        document.getElementById('editId').value = boton.getAttribute('data-id');
-        document.getElementById('editUsuario').value = boton.getAttribute('data-usuario');
-        document.getElementById('editTipo').value = boton.getAttribute('data-tipo');
-        document.getElementById('editMotivo').value = boton.getAttribute('data-motivo');
-        document.getElementById('editFecha').value = boton.getAttribute('data-fecha');
-        document.getElementById('editHora').value = boton.getAttribute('data-hora');
-    });
+        document.getElementById('modalEditar').addEventListener('show.bs.modal', function (event) {
+            var boton = event.relatedTarget;
+            document.getElementById('editId').value = boton.getAttribute('data-id');
+            document.getElementById('editUsuario').value = boton.getAttribute('data-usuario');
+            document.getElementById('editTipo').value = boton.getAttribute('data-tipo');
+            document.getElementById('editMotivo').value = boton.getAttribute('data-motivo');
+            document.getElementById('editFecha').value = boton.getAttribute('data-fecha');
+            document.getElementById('editHora').value = boton.getAttribute('data-hora');
+        });
     </script>
 }

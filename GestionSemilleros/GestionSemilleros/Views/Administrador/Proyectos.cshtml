@@ -5,6 +5,12 @@
     var proyectoActivo = ViewBag.ProyectoActivo as int?;
 }
 
+@if (TempData["Error"] != null)
+{
+    <div class="mensaje-error" style="margin-bottom:1rem;">
+        <i class="bi bi-exclamation-circle-fill"></i> @TempData["Error"]
+    </div>
+}
 <div class="encabezado-modulo">
     <h4>Gestionar Proyectos</h4>
     <button class="btn-registrar" data-bs-toggle="modal" data-bs-target="#modalRegistrarProyecto">
@@ -224,27 +230,27 @@
                     @using (Html.BeginForm("RegistrarActividad", "Administrador", FormMethod.Post))
                     {
                         @Html.Hidden("proyectoId", proyectoActivo.Value)
-                <div class="modal-body">
-                    <input type="hidden" name="IdFase" id="actividadFaseId" />
-                    <div class="campo-form">
-                        <label>Nombre de la actividad</label>
-                        <input type="text" name="NombreActividad" class="form-control" required />
-                    </div>
-                    <div class="campo-form">
-                        <label>Duración en días <small style="color:#6b7280;">(fecha de entrega se calcula automáticamente)</small></label>
-                        <select name="DuracionActividad" class="form-control" required>
-                            <option value="">Selecciona...</option>
-                            @{
-                                var diasDisponibles = ViewBag.DiasDisponiblesPorFase as Dictionary<int, int>;
-                                int diasFase = diasDisponibles != null ? diasDisponibles.Values.FirstOrDefault() : 0;
-                            }
-                            @for (int i = 1; i <= diasFase; i++)
-                            {
-                                <option value="@i">@i día@(i > 1 ? "s" : "")</option>
-                            }
-                        </select>
-                    </div>
-                </div>
+                        <div class="modal-body">
+                            <input type="hidden" name="IdFase" id="actividadFaseId" />
+                            <div class="campo-form">
+                                <label>Nombre de la actividad</label>
+                                <input type="text" name="NombreActividad" class="form-control" required />
+                            </div>
+                            <div class="campo-form">
+                                <label>Duración en días <small style="color:#6b7280;">(fecha de entrega se calcula automáticamente)</small></label>
+                                <select name="DuracionActividad" class="form-control" required>
+                                    <option value="">Selecciona...</option>
+                                    @{
+                                        var diasDisponibles = ViewBag.DiasDisponiblesPorFase as Dictionary<int, int>;
+                                        int diasFase = diasDisponibles != null ? diasDisponibles.Values.FirstOrDefault() : 0;
+                                    }
+                                    @for (int i = 1; i <= diasFase; i++)
+                                    {
+                                        <option value="@i">@i día@(i > 1 ? "s" : "")</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
                         <div class="modal-footer">
                             <button type="button" class="btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
                             <button type="submit" class="btn-guardar">Guardar</button>

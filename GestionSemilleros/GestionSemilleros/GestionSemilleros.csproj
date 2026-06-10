@@ -56,6 +56,9 @@
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -109,9 +112,6 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="WebGrease">
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
@@ -130,25 +130,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202606050412113_Inicial.cs" />
-    <Compile Include="Migrations\202606050412113_Inicial.Designer.cs">
-      <DependentUpon>202606050412113_Inicial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202606080438020_ReunionMuchosAMuchos.cs" />
-    <Compile Include="Migrations\202606080438020_ReunionMuchosAMuchos.Designer.cs">
-      <DependentUpon>202606080438020_ReunionMuchosAMuchos.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202606080457069_ReunionFinal.cs" />
-    <Compile Include="Migrations\202606080457069_ReunionFinal.Designer.cs">
-      <DependentUpon>202606080457069_ReunionFinal.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202606090400489_AgregarEstadoReunion.cs" />
-    <Compile Include="Migrations\202606090400489_AgregarEstadoReunion.Designer.cs">
-      <DependentUpon>202606090400489_AgregarEstadoReunion.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202606100331008_DuracionFaseAInt.cs" />
-    <Compile Include="Migrations\202606100331008_DuracionFaseAInt.Designer.cs">
-      <DependentUpon>202606100331008_DuracionFaseAInt.cs</DependentUpon>
+    <Compile Include="Migrations\202606101821514_Inicial.cs" />
+    <Compile Include="Migrations\202606101821514_Inicial.Designer.cs">
+      <DependentUpon>202606101821514_Inicial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Entidades\Actividad.cs" />
@@ -256,20 +240,8 @@
     <Content Include="Scripts\jquery-3.7.0.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202606050412113_Inicial.resx">
-      <DependentUpon>202606050412113_Inicial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202606080438020_ReunionMuchosAMuchos.resx">
-      <DependentUpon>202606080438020_ReunionMuchosAMuchos.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202606080457069_ReunionFinal.resx">
-      <DependentUpon>202606080457069_ReunionFinal.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202606090400489_AgregarEstadoReunion.resx">
-      <DependentUpon>202606090400489_AgregarEstadoReunion.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202606100331008_DuracionFaseAInt.resx">
-      <DependentUpon>202606100331008_DuracionFaseAInt.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202606101821514_Inicial.resx">
+      <DependentUpon>202606101821514_Inicial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

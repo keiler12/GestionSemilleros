@@ -28,7 +28,7 @@
                         IdFase = c.Int(nullable: false, identity: true),
                         IdProyecto = c.Int(nullable: false),
                         NombreFase = c.String(),
-                        DuracionFase = c.String(),
+                        DuracionFase = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.IdFase)
                 .ForeignKey("dbo.Proyecto", t => t.IdProyecto, cascadeDelete: true)
@@ -110,15 +110,13 @@
                 c => new
                     {
                         IdReunion = c.Int(nullable: false, identity: true),
-                        IdUsuario = c.Int(nullable: false),
                         TipoReunion = c.String(),
                         HoraReunion = c.Time(nullable: false, precision: 7),
                         MotivoReunion = c.String(),
                         FechaReunion = c.DateTime(nullable: false),
+                        EstadoReunion = c.String(),
                     })
-                .PrimaryKey(t => t.IdReunion)
-                .ForeignKey("dbo.Usuario", t => t.IdUsuario, cascadeDelete: true)
-                .Index(t => t.IdUsuario);
+                .PrimaryKey(t => t.IdReunion);
             
             CreateTable(
                 "dbo.EventoPatrocinadores",
@@ -146,12 +144,26 @@
                 .Index(t => t.idProyecto)
                 .Index(t => t.idEvento);
             
+            CreateTable(
+                "dbo.ReunionUsuarios",
+                c => new
+                    {
+                        idReunion = c.Int(nullable: false),
+                        idUsuario = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => new { t.idReunion, t.idUsuario })
+                .ForeignKey("dbo.Reunion", t => t.idReunion, cascadeDelete: true)
+                .ForeignKey("dbo.Usuario", t => t.idUsuario, cascadeDelete: true)
+                .Index(t => t.idReunion)
+                .Index(t => t.idUsuario);
+            
         }
         
         public override void Down()
         {
             DropForeignKey("dbo.Usuario", "IdSemillero", "dbo.Semillero");
-            DropForeignKey("dbo.Reunion", "IdUsuario", "dbo.Usuario");
+            DropForeignKey("dbo.ReunionUsuarios", "idUsuario", "dbo.Usuario");
+            DropForeignKey("dbo.ReunionUsuarios", "idReunion", "dbo.Reunion");
             DropForeignKey("dbo.Proyecto", "IdSemillero", "dbo.Semillero");
             DropForeignKey("dbo.Fase", "IdProyecto", "dbo.Proyecto");
             DropForeignKey("dbo.ProyectosEventos", "idEvento", "dbo.Evento");
@@ -159,15 +171,17 @@
             DropForeignKey("dbo.EventoPatrocinadores", "idPatrocinador", "dbo.Patrocinador");
             DropForeignKey("dbo.EventoPatrocinadores", "idEvento", "dbo.Evento");
             DropForeignKey("dbo.Actividad", "IdFase", "dbo.Fase");
+            DropIndex("dbo.ReunionUsuarios", new[] { "idUsuario" });
+            DropIndex("dbo.ReunionUsuarios", new[] { "idReunion" });
             DropIndex("dbo.ProyectosEventos", new[] { "idEvento" });
             DropIndex("dbo.ProyectosEventos", new[] { "idProyecto" });
             DropIndex("dbo.EventoPatrocinadores", new[] { "idPatrocinador" });
             DropIndex("dbo.EventoPatrocinadores", new[] { "idEvento" });
-            DropIndex("dbo.Reunion", new[] { "IdUsuario" });
             DropIndex("dbo.Usuario", new[] { "IdSemillero" });
             DropIndex("dbo.Proyecto", new[] { "IdSemillero" });
             DropIndex("dbo.Fase", new[] { "IdProyecto" });
             DropIndex("dbo.Actividad", new[] { "IdFase" });
+            DropTable("dbo.ReunionUsuarios");
             DropTable("dbo.ProyectosEventos");
             DropTable("dbo.EventoPatrocinadores");
             DropTable("dbo.Reunion");

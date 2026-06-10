@@ -7,13 +7,13 @@ namespace GestionSemilleros.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.6.0-preview1-final")]
-    public sealed partial class DuracionFaseAInt : IMigrationMetadata
+    public sealed partial class Inicial : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(DuracionFaseAInt));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Inicial));
         
         string IMigrationMetadata.Id
         {
-            get { return "202606100331008_DuracionFaseAInt"; }
+            get { return "202606101821514_Inicial"; }
         }
         
         string IMigrationMetadata.Source
