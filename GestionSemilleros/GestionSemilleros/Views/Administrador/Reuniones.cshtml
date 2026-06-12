@@ -4,6 +4,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@{
+    var usuariosPorReunion = ViewBag.UsuariosPorReunion as Dictionary<int, List<int>>;
+}
+
 @if (TempData["Error"] != null)
 {
     <div class="mensaje-error" style="margin-bottom:1rem;">
@@ -48,7 +52,8 @@
                             data-tipo="@reunion.TipoReunion"
                             data-motivo="@reunion.MotivoReunion"
                             data-fecha="@reunion.FechaReunion.ToString("yyyy-MM-dd")"
-                            data-hora="@reunion.HoraReunion.ToString(@"hh\:mm")">
+                            data-hora="@reunion.HoraReunion.ToString(@"hh\:mm")"
+                            data-usuarios="@string.Join(",", reunion.Usuarios.Select(u => u.IdUsuario))">
                         <i class="bi bi-pencil-fill"></i> Editar
                     </button>
                     @using (Html.BeginForm("EliminarReunion", "Administrador", FormMethod.Post, new { style = "display:inline" }))
@@ -135,16 +140,6 @@
                 <div class="modal-body">
                     <input type="hidden" name="IdReunion" id="editId" />
                     <div class="campo-form">
-                        <label>Usuario</label>
-                        <select name="IdUsuario" id="editUsuario" class="form-control" required>
-                            <option value="">Selecciona...</option>
-                            @foreach (var usuario in ViewBag.Usuarios as IEnumerable<GestionSemilleros.Models.Entidades.Usuario>)
-                            {
-                                <option value="@usuario.IdUsuario">@usuario.NombresUsuario</option>
-                            }
-                        </select>
-                    </div>
-                    <div class="campo-form">
                         <label>Tipo de reunión</label>
                         <input type="text" name="TipoReunion" id="editTipo" class="form-control" required />
                     </div>
@@ -158,7 +153,38 @@
                     </div>
                     <div class="campo-form">
                         <label>Hora</label>
-                        <input type="time" name="HoraReunion" id="editHora" class="form-control" required />
+                        <select name="HoraReunion" id="editHora" class="form-control" required>
+                            <option value="">Selecciona una hora...</option>
+                            <option value="07:00:00">07:00</option>
+                            <option value="08:00:00">08:00</option>
+                            <option value="09:00:00">09:00</option>
+                            <option value="10:00:00">10:00</option>
+                            <option value="11:00:00">11:00</option>
+                            <option value="13:00:00">13:00</option>
+                            <option value="14:00:00">14:00</option>
+                            <option value="15:00:00">15:00</option>
+                            <option value="16:00:00">16:00</option>
+                            <option value="17:00:00">17:00</option>
+                        </select>
+                    </div>
+                    <div class="campo-form">
+                        <label>Usuarios <small style="color:#6b7280;">(marca los que participan)</small></label>
+                        <div style="border:1px solid #d1d5db; border-radius:8px; padding:0.75rem; max-height:200px; overflow-y:auto;">
+                            @foreach (var usuario in ViewBag.Usuarios as IEnumerable<GestionSemilleros.Models.Entidades.Usuario>)
+                            {
+                                <div class="form-check">
+                                    <input class="form-check-input usuario-check"
+                                           type="checkbox"
+                                           name="UsuariosIds"
+                                           value="@usuario.IdUsuario"
+                                           id="usuario_@usuario.IdUsuario"
+                                           data-usuarioid="@usuario.IdUsuario" />
+                                    <label class="form-check-label" for="usuario_@usuario.IdUsuario">
+                                        @usuario.NombresUsuario — <small style="color:#6b7280;">@usuario.RolUsuario</small>
+                                    </label>
+                                </div>
+                            }
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -181,5 +207,21 @@
             document.getElementById('editFecha').value = boton.getAttribute('data-fecha');
             document.getElementById('editHora').value = boton.getAttribute('data-hora');
         });
+
+        document.getElementById('modalEditar').addEventListener('show.bs.modal', function (event) {
+            var boton = event.relatedTarget;
+            document.getElementById('editId').value = boton.getAttribute('data-id');
+            document.getElementById('editTipo').value = boton.getAttribute('data-tipo');
+            document.getElementById('editMotivo').value = boton.getAttribute('data-motivo');
+            document.getElementById('editFecha').value = boton.getAttribute('data-fecha');
+            document.getElementById('editHora').value = boton.getAttribute('data-hora');
+
+            var usuariosActuales = boton.getAttribute('data-usuarios').split(',');
+            document.querySelectorAll('.usuario-check').forEach(function (cb) {
+                cb.checked = usuariosActuales.includes(cb.value);
+            });
+        });
     </script>
+
+
 }

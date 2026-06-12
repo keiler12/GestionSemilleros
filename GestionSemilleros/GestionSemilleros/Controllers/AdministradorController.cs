@@ -537,7 +537,6 @@ namespace GestionSemilleros.Controllers
         }
 
         // ==================== REUNIONES ====================
-
         public ActionResult Reuniones()
         {
             if (Session["Rol"] == null || Session["Rol"].ToString() != "Administrador")
@@ -545,11 +544,20 @@ namespace GestionSemilleros.Controllers
 
             ViewBag.MenuActivo = "Reuniones";
             ViewBag.Usuarios = baseDatos.Usuarios
-             .Where(u => u.RolUsuario == "Lider" || u.RolUsuario == "Investigador")
-             .ToList();
+                .Where(u => u.RolUsuario == "Lider" || u.RolUsuario == "Investigador")
+                .ToList();
+
             var listaReuniones = baseDatos.Reuniones
                 .Include("Usuarios")
                 .ToList();
+
+         
+            ViewBag.UsuariosPorReunion = listaReuniones
+                .ToDictionary(
+                    r => r.IdReunion,
+                    r => r.Usuarios.Select(u => u.IdUsuario).ToList()
+                );
+
             return View(listaReuniones);
         }
 
@@ -654,16 +662,30 @@ namespace GestionSemilleros.Controllers
         }
 
         [HttpPost]
-        public ActionResult ModificarReunion(Reunion reunion)
+        public ActionResult ModificarReunion(Reunion reunion, int[] UsuariosIds)
         {
-            var registro = baseDatos.Reuniones.Find(reunion.IdReunion);
-            if (registro != null)
+            var registro = baseDatos.Reuniones
+                .Include("Usuarios")
+                .FirstOrDefault(r => r.IdReunion == reunion.IdReunion);
+
+            if (registro != null && registro.EstadoReunion == "Pendiente")
             {
                 registro.TipoReunion = reunion.TipoReunion;
-                registro.HoraReunion = reunion.HoraReunion;
                 registro.MotivoReunion = reunion.MotivoReunion;
                 registro.FechaReunion = reunion.FechaReunion;
-               
+                registro.HoraReunion = reunion.HoraReunion;
+
+                registro.Usuarios.Clear();
+
+                if (UsuariosIds != null)
+                {
+                    foreach (var idUsuario in UsuariosIds)
+                    {
+                        var usuario = baseDatos.Usuarios.Find(idUsuario);
+                        if (usuario != null)
+                            registro.Usuarios.Add(usuario);
+                    }
+                }
                 baseDatos.SaveChanges();
             }
             return RedirectToAction("Reuniones");
