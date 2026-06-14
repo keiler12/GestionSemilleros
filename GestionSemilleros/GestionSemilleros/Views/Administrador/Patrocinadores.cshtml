@@ -4,6 +4,34 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<div class="filtros-panel">
+    <span class="filtros-label">Consultar por parámetros</span>
+    @using (Html.BeginForm("Patrocinadores", "Administrador", FormMethod.Get))
+    {
+        <div class="filtros-fila">
+            <span style="font-size:13px; font-weight:500; color:#374151; white-space:nowrap;">Selecciona la opción</span>
+            <select name="filtroCampo" class="filtro-select" onchange="this.form.submit()">
+                <option value="">Selecciona...</option>
+                <option value="Nombre" @(ViewBag.FiltroCampo == "Nombre" ? "selected" : "")>Nombre</option>
+                <option value="Tipo" @(ViewBag.FiltroCampo == "Tipo" ? "selected" : "")>Tipo</option>
+            </select>
+            <select name="filtroValor" class="filtro-select">
+                <option value="">Todos</option>
+                @foreach (var valor in ViewBag.ValoresFiltro as List<string>)
+                {
+                    <option value="@valor" @(ViewBag.FiltroValor == valor ? "selected" : "")>@valor</option>
+                }
+            </select>
+            <button type="submit" class="btn-buscar">
+                <i class="bi bi-search"></i> Buscar
+            </button>
+            <a href="@Url.Action("Patrocinadores", "Administrador")" class="btn-limpiar">
+                <i class="bi bi-eraser"></i> Limpiar
+            </a>
+        </div>
+    }
+</div>
+
 <div class="encabezado-modulo">
     <h4>Gestionar Patrocinadores</h4>
     <button class="btn-registrar" data-bs-toggle="modal" data-bs-target="#modalRegistrar">

@@ -24,14 +24,38 @@ namespace GestionSemilleros.Controllers
 
         //  SEMILLEROS 
 
-        public ActionResult Semilleros()
+        public ActionResult Semilleros(string filtroCampo, string filtroValor)
         {
             if (Session["Rol"] == null || Session["Rol"].ToString() != "Administrador")
                 return RedirectToAction("Index", "Login");
 
             ViewBag.MenuActivo = "Semilleros";
-            var listaSemilleros = baseDatos.Semilleros.ToList();
-            return View(listaSemilleros);
+            ViewBag.FiltroCampo = filtroCampo;
+            ViewBag.FiltroValor = filtroValor;
+
+            // Cargar valores según campo seleccionado
+            if (filtroCampo == "Nombre")
+                ViewBag.ValoresFiltro = baseDatos.Semilleros.Select(s => s.NombreSemillero).Distinct().ToList();
+            else if (filtroCampo == "Linea")
+                ViewBag.ValoresFiltro = baseDatos.Semilleros.Select(s => s.LineaSemillero).Distinct().ToList();
+            else if (filtroCampo == "Enfoque")
+                ViewBag.ValoresFiltro = baseDatos.Semilleros.Select(s => s.EnfoqueSemillero).Distinct().ToList();
+            else
+                ViewBag.ValoresFiltro = new List<string>();
+
+            var lista = baseDatos.Semilleros.AsQueryable();
+
+            if (!string.IsNullOrEmpty(filtroCampo) && !string.IsNullOrEmpty(filtroValor))
+            {
+                if (filtroCampo == "Nombre")
+                    lista = lista.Where(s => s.NombreSemillero.Contains(filtroValor));
+                else if (filtroCampo == "Linea")
+                    lista = lista.Where(s => s.LineaSemillero.Contains(filtroValor));
+                else if (filtroCampo == "Enfoque")
+                    lista = lista.Where(s => s.EnfoqueSemillero.Contains(filtroValor));
+            }
+
+            return View(lista.ToList());
         }
 
         [HttpPost]
@@ -71,44 +95,42 @@ namespace GestionSemilleros.Controllers
 
         //USUARIOS 
 
-        public ActionResult Usuarios()
+        public ActionResult Usuarios(string filtroCampo, string filtroValor)
         {
-            if (Session["Rol"] == null || Session["Rol"].ToString() != "Administrador")// Verifica si el usuario no ha iniciado sesión o no tiene el rol de "Administrador"
+            if (Session["Rol"] == null || Session["Rol"].ToString() != "Administrador")
                 return RedirectToAction("Index", "Login");
 
-            ViewBag.MenuActivo = "Usuarios";// Establece la variable ViewBag.MenuActivo para resaltar el menú de "Usuarios" en la vista
-            ViewBag.Semilleros = baseDatos.Semilleros.ToList();// Obtiene la lista de semilleros de la base de datos y la asigna a ViewBag.Semilleros para su uso en la vista
-            var listaUsuarios = baseDatos.Usuarios.Include("Semillero").ToList();// Obtiene la lista de usuarios de la base de datos, incluyendo la información del semillero asociado a cada usuario, y la asigna a la variable listaUsuarios
-            return View(listaUsuarios);// Devuelve la vista "Usuarios" con la lista de usuarios obtenida de la base de datos
-        }
+            ViewBag.MenuActivo = "Usuarios";
+            ViewBag.FiltroCampo = filtroCampo;
+            ViewBag.FiltroValor = filtroValor;
+            ViewBag.Semilleros = baseDatos.Semilleros.ToList();
 
-        [HttpPost]
-        public ActionResult RegistrarUsuario(Usuario usuario)// Recibe un objeto Usuario como parámetro, que contiene la información del nuevo usuario a registrar
-        {
-            usuario.EstadoUsuario = "Activo";// Establece el estado del nuevo usuario como "Activo" por defecto
-            baseDatos.Usuarios.Add(usuario);// Agrega el nuevo usuario a la base de datos
-            baseDatos.SaveChanges();// Guarda los cambios en la base de datos
-            return RedirectToAction("Usuarios");
-        }
+            if (filtroCampo == "Nombre")
+                ViewBag.ValoresFiltro = baseDatos.Usuarios.Select(u => u.NombresUsuario).Distinct().ToList();
+            else if (filtroCampo == "Rol")
+                ViewBag.ValoresFiltro = new List<string> { "Administrador", "Lider", "Investigador" };
+            else if (filtroCampo == "Estado")
+                ViewBag.ValoresFiltro = new List<string> { "Activo", "Inactivo" };
+            else if (filtroCampo == "Semillero")
+                ViewBag.ValoresFiltro = baseDatos.Semilleros.Select(s => s.NombreSemillero).Distinct().ToList();
+            else
+                ViewBag.ValoresFiltro = new List<string>();
 
-        [HttpPost]
-        public ActionResult ModificarUsuario(Usuario usuario)
-        {
-            var registro = baseDatos.Usuarios.Find(usuario.IdUsuario);// Busca el usuario existente en la base de datos por su ID
-            if (registro != null)// Si se encuentra el usuario, actualiza sus propiedades con los nuevos valores proporcionados
+            var lista = baseDatos.Usuarios.Include("Semillero").AsQueryable();
+
+            if (!string.IsNullOrEmpty(filtroCampo) && !string.IsNullOrEmpty(filtroValor))
             {
-                // Actualiza las propiedades del usuario con los nuevos valores proporcionados
-                registro.NombresUsuario = usuario.NombresUsuario;
-                registro.CorreoUsuario = usuario.CorreoUsuario;
-                registro.ContraseñaUsuario = usuario.ContraseñaUsuario;
-                registro.TelefonoUsuario = usuario.TelefonoUsuario;
-                registro.RolUsuario = usuario.RolUsuario;
-                registro.EdadUsuario = usuario.EdadUsuario;
-                registro.GeneroUsuario = usuario.GeneroUsuario;
-                registro.IdSemillero = usuario.IdSemillero;
-                baseDatos.SaveChanges();// Guarda los cambios en la base de datos
+                if (filtroCampo == "Nombre")
+                    lista = lista.Where(u => u.NombresUsuario.Contains(filtroValor));
+                else if (filtroCampo == "Rol")
+                    lista = lista.Where(u => u.RolUsuario == filtroValor);
+                else if (filtroCampo == "Estado")
+                    lista = lista.Where(u => u.EstadoUsuario == filtroValor);
+                else if (filtroCampo == "Semillero")
+                    lista = lista.Where(u => u.Semillero.NombreSemillero == filtroValor);
             }
-            return RedirectToAction("Usuarios");
+
+            return View(lista.ToList());
         }
 
         [HttpPost]
@@ -137,8 +159,7 @@ namespace GestionSemilleros.Controllers
 
 
         // ==================== PROYECTOS ====================
-
-        public ActionResult Proyectos(int? proyectoActivo)
+        public ActionResult Proyectos(int? proyectoActivo, string filtroCampo, string filtroValor)
         {
             if (Session["Rol"] == null || Session["Rol"].ToString() != "Administrador")
                 return RedirectToAction("Index", "Login");
@@ -146,12 +167,29 @@ namespace GestionSemilleros.Controllers
             ViewBag.MenuActivo = "Proyectos";
             ViewBag.Semilleros = baseDatos.Semilleros.ToList();
             ViewBag.ProyectoActivo = proyectoActivo;
+            ViewBag.FiltroCampo = filtroCampo;
+            ViewBag.FiltroValor = filtroValor;
             ViewBag.SemanasDisponibles = 0;
             ViewBag.SemanasTotal = 0;
 
-            var listaProyectos = baseDatos.Proyectos
-                .Include("Fases.Actividades")
-                .ToList();
+            if (filtroCampo == "Titulo")
+                ViewBag.ValoresFiltro = baseDatos.Proyectos.Select(p => p.TituloProyecto).Distinct().ToList();
+            else if (filtroCampo == "Semillero")
+                ViewBag.ValoresFiltro = baseDatos.Semilleros.Select(s => s.NombreSemillero).Distinct().ToList();
+            else
+                ViewBag.ValoresFiltro = new List<string>();
+
+            var lista = baseDatos.Proyectos.Include("Fases.Actividades").AsQueryable();
+
+            if (!string.IsNullOrEmpty(filtroCampo) && !string.IsNullOrEmpty(filtroValor))
+            {
+                if (filtroCampo == "Titulo")
+                    lista = lista.Where(p => p.TituloProyecto.Contains(filtroValor));
+                else if (filtroCampo == "Semillero")
+                    lista = lista.Where(p => p.Semillero.NombreSemillero == filtroValor);
+            }
+
+            var listaProyectos = lista.ToList();
 
             if (proyectoActivo.HasValue)
             {
@@ -163,29 +201,21 @@ namespace GestionSemilleros.Controllers
                     var semanasUsadas = proyecto.Fases.Sum(f => f.DuracionFase);
                     ViewBag.SemanasDisponibles = semanasTotal - semanasUsadas;
                     ViewBag.SemanasTotal = semanasTotal;
-                }
-            }
-            // Calcular días disponibles por fase
-            var diasDisponiblesPorFase = new Dictionary<int, int>();
-            if (proyectoActivo.HasValue)
-            {
-                var proyecto = listaProyectos.FirstOrDefault(p => p.IdProyecto == proyectoActivo.Value);
-                if (proyecto != null)
-                {
+
+                    var diasDisponiblesPorFase = new Dictionary<int, int>();
                     foreach (var fase in proyecto.Fases)
                     {
                         var diasTotalesFase = fase.DuracionFase * 7;
                         var diasUsados = fase.Actividades.Sum(a => string.IsNullOrEmpty(a.DuracionActividad) ? 0 : int.Parse(a.DuracionActividad));
                         diasDisponiblesPorFase[fase.IdFase] = diasTotalesFase - diasUsados;
                     }
+                    ViewBag.DiasDisponiblesPorFase = diasDisponiblesPorFase;
                 }
             }
-            ViewBag.DiasDisponiblesPorFase = diasDisponiblesPorFase;
 
             return View(listaProyectos);
-
-
         }
+
         [HttpPost]
         public ActionResult RegistrarProyecto(Proyecto proyecto)
         {
@@ -361,20 +391,43 @@ namespace GestionSemilleros.Controllers
 
         // ==================== EVENTOS ====================
 
-        public ActionResult Eventos(int? eventoActivo)
+        public ActionResult Eventos(int? eventoActivo, string filtroCampo, string filtroValor)
         {
             if (Session["Rol"] == null || Session["Rol"].ToString() != "Administrador")
                 return RedirectToAction("Index", "Login");
 
             ViewBag.MenuActivo = "Eventos";
             ViewBag.EventoActivo = eventoActivo;
+            ViewBag.FiltroCampo = filtroCampo;
+            ViewBag.FiltroValor = filtroValor;
             ViewBag.Proyectos = baseDatos.Proyectos.ToList();
             ViewBag.Patrocinadores = baseDatos.Patrocinadores.ToList();
-            var listaEventos = baseDatos.Eventos
+
+            if (filtroCampo == "Nombre")
+                ViewBag.ValoresFiltro = baseDatos.Eventos.Select(e => e.NombreEvento).Distinct().ToList();
+            else if (filtroCampo == "Tipo")
+                ViewBag.ValoresFiltro = baseDatos.Eventos.Select(e => e.TipoEvento).Distinct().ToList();
+            else if (filtroCampo == "Organizador")
+                ViewBag.ValoresFiltro = baseDatos.Eventos.Select(e => e.OrganizadorEvento).Distinct().ToList();
+            else
+                ViewBag.ValoresFiltro = new List<string>();
+
+            var lista = baseDatos.Eventos
                 .Include("Proyectos")
                 .Include("Patrocinadores")
-                .ToList();
-            return View(listaEventos);
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(filtroCampo) && !string.IsNullOrEmpty(filtroValor))
+            {
+                if (filtroCampo == "Nombre")
+                    lista = lista.Where(e => e.NombreEvento.Contains(filtroValor));
+                else if (filtroCampo == "Tipo")
+                    lista = lista.Where(e => e.TipoEvento == filtroValor);
+                else if (filtroCampo == "Organizador")
+                    lista = lista.Where(e => e.OrganizadorEvento.Contains(filtroValor));
+            }
+
+            return View(lista.ToList());
         }
 
         [HttpPost]
@@ -486,15 +539,33 @@ namespace GestionSemilleros.Controllers
         }
 
         // ==================== PATROCINADORES ====================
-
-        public ActionResult Patrocinadores()
+        public ActionResult Patrocinadores(string filtroCampo, string filtroValor)
         {
             if (Session["Rol"] == null || Session["Rol"].ToString() != "Administrador")
                 return RedirectToAction("Index", "Login");
 
             ViewBag.MenuActivo = "Patrocinadores";
-            var listaPatrocinadores = baseDatos.Patrocinadores.ToList();
-            return View(listaPatrocinadores);
+            ViewBag.FiltroCampo = filtroCampo;
+            ViewBag.FiltroValor = filtroValor;
+
+            if (filtroCampo == "Nombre")
+                ViewBag.ValoresFiltro = baseDatos.Patrocinadores.Select(p => p.NombrePatrocinador).Distinct().ToList();
+            else if (filtroCampo == "Tipo")
+                ViewBag.ValoresFiltro = baseDatos.Patrocinadores.Select(p => p.TipoPatrocinador).Distinct().ToList();
+            else
+                ViewBag.ValoresFiltro = new List<string>();
+
+            var lista = baseDatos.Patrocinadores.AsQueryable();
+
+            if (!string.IsNullOrEmpty(filtroCampo) && !string.IsNullOrEmpty(filtroValor))
+            {
+                if (filtroCampo == "Nombre")
+                    lista = lista.Where(p => p.NombrePatrocinador.Contains(filtroValor));
+                else if (filtroCampo == "Tipo")
+                    lista = lista.Where(p => p.TipoPatrocinador == filtroValor);
+            }
+
+            return View(lista.ToList());
         }
 
         [HttpPost]
@@ -537,26 +608,44 @@ namespace GestionSemilleros.Controllers
         }
 
         // ==================== REUNIONES ====================
-        public ActionResult Reuniones()
+        public ActionResult Reuniones(string filtroCampo, string filtroValor)
         {
             if (Session["Rol"] == null || Session["Rol"].ToString() != "Administrador")
                 return RedirectToAction("Index", "Login");
 
+            ActualizarEstadosReuniones();
+
             ViewBag.MenuActivo = "Reuniones";
+            ViewBag.FiltroCampo = filtroCampo;
+            ViewBag.FiltroValor = filtroValor;
             ViewBag.Usuarios = baseDatos.Usuarios
                 .Where(u => u.RolUsuario == "Lider" || u.RolUsuario == "Investigador")
                 .ToList();
 
-            var listaReuniones = baseDatos.Reuniones
-                .Include("Usuarios")
-                .ToList();
+            if (filtroCampo == "Tipo")
+                ViewBag.ValoresFiltro = baseDatos.Reuniones.Select(r => r.TipoReunion).Distinct().ToList();
+            else if (filtroCampo == "Estado")
+                ViewBag.ValoresFiltro = new List<string> { "Pendiente", "En curso", "Realizada", "Cancelada" };
+            else if (filtroCampo == "Fecha")
+                ViewBag.ValoresFiltro = baseDatos.Reuniones.Select(r => r.FechaReunion.ToString()).Distinct().ToList();
+            else
+                ViewBag.ValoresFiltro = new List<string>();
 
-         
+            var lista = baseDatos.Reuniones.Include("Usuarios").AsQueryable();
+
+            if (!string.IsNullOrEmpty(filtroCampo) && !string.IsNullOrEmpty(filtroValor))
+            {
+                if (filtroCampo == "Tipo")
+                    lista = lista.Where(r => r.TipoReunion == filtroValor);
+                else if (filtroCampo == "Estado")
+                    lista = lista.Where(r => r.EstadoReunion == filtroValor);
+                else if (filtroCampo == "Fecha")
+                    lista = lista.Where(r => r.FechaReunion.ToString() == filtroValor);
+            }
+
+            var listaReuniones = lista.ToList();
             ViewBag.UsuariosPorReunion = listaReuniones
-                .ToDictionary(
-                    r => r.IdReunion,
-                    r => r.Usuarios.Select(u => u.IdUsuario).ToList()
-                );
+                .ToDictionary(r => r.IdReunion, r => r.Usuarios.Select(u => u.IdUsuario).ToList());
 
             return View(listaReuniones);
         }
@@ -605,15 +694,21 @@ namespace GestionSemilleros.Controllers
                 return RedirectToAction("Reuniones");
             }
 
-            bool horaOcupada = baseDatos.Reuniones.Any(r =>
-                r.FechaReunion == reunion.FechaReunion &&
-                r.HoraReunion == reunion.HoraReunion &&
-                r.EstadoReunion != "Cancelada");
+            // Verificar hora ocupada considerando duración
+            var reunionesDelDia = baseDatos.Reuniones
+                .Where(r => r.FechaReunion == reunion.FechaReunion && r.EstadoReunion != "Cancelada")
+                .ToList();
 
-            if (horaOcupada)
+            var horaFin = reunion.HoraReunion.Add(TimeSpan.FromMinutes(reunion.DuracionMinutos));
+
+            foreach (var r in reunionesDelDia)
             {
-                TempData["Error"] = "Ya existe una reunión programada a esa hora ese día.";
-                return RedirectToAction("Reuniones");
+                var horaFinExistente = r.HoraReunion.Add(TimeSpan.FromMinutes(r.DuracionMinutos));
+                if (reunion.HoraReunion < horaFinExistente && horaFin > r.HoraReunion)
+                {
+                    TempData["Error"] = "Ya existe una reunión que se cruza con ese horario.";
+                    return RedirectToAction("Reuniones");
+                }
             }
 
             if (UsuariosIds == null || UsuariosIds.Length == 0)
@@ -632,16 +727,16 @@ namespace GestionSemilleros.Controllers
                 return RedirectToAction("Reuniones");
             }
 
-            // Verificar que haya al menos un investigador
             var hayInvestigador = baseDatos.Usuarios
                 .Where(u => UsuariosIds.Contains(u.IdUsuario) && u.RolUsuario == "Investigador")
                 .Any();
 
             if (!hayInvestigador)
             {
-                TempData["Error"] = "La reunión debe tener al menos un investigador además del líder.";
+                TempData["Error"] = "La reunión debe tener al menos un investigador.";
                 return RedirectToAction("Reuniones");
             }
+
             reunion.EstadoReunion = "Pendiente";
             baseDatos.Reuniones.Add(reunion);
             baseDatos.SaveChanges();
@@ -659,6 +754,29 @@ namespace GestionSemilleros.Controllers
             baseDatos.SaveChanges();
 
             return RedirectToAction("Reuniones");
+        }
+
+        private void ActualizarEstadosReuniones()
+        {
+            var ahora = DateTime.Now;
+            var reuniones = baseDatos.Reuniones
+                .Where(r => r.EstadoReunion != "Cancelada")
+                .ToList();
+
+            foreach (var reunion in reuniones)
+            {
+                var horaInicio = reunion.FechaReunion.Add(reunion.HoraReunion);
+                var horaFin = horaInicio.AddMinutes(reunion.DuracionMinutos);
+
+                if (ahora < horaInicio)
+                    reunion.EstadoReunion = "Pendiente";
+                else if (ahora >= horaInicio && ahora < horaFin)
+                    reunion.EstadoReunion = "En curso";
+                else if (ahora >= horaFin)
+                    reunion.EstadoReunion = "Realizada";
+            }
+
+            baseDatos.SaveChanges();
         }
 
         [HttpPost]

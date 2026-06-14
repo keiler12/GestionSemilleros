@@ -134,6 +134,10 @@
     <Compile Include="Migrations\202606101821514_Inicial.Designer.cs">
       <DependentUpon>202606101821514_Inicial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202606130421572_AgregarDuracionReunion.cs" />
+    <Compile Include="Migrations\202606130421572_AgregarDuracionReunion.Designer.cs">
+      <DependentUpon>202606130421572_AgregarDuracionReunion.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Entidades\Actividad.cs" />
     <Compile Include="Models\Entidades\Evento.cs" />
@@ -242,6 +246,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202606101821514_Inicial.resx">
       <DependentUpon>202606101821514_Inicial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202606130421572_AgregarDuracionReunion.resx">
+      <DependentUpon>202606130421572_AgregarDuracionReunion.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -15,7 +15,7 @@ namespace GestionSemilleros.Models.Entidades
         public string MotivoReunion { get; set; }
         public DateTime FechaReunion { get; set; }
         public string EstadoReunion { get; set; }
-
+        public int DuracionMinutos { get; set; }
         public virtual ICollection<Usuario> Usuarios { get; set; }
     }
 }
