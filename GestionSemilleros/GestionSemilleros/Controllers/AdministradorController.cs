@@ -146,6 +146,26 @@ namespace GestionSemilleros.Controllers
         }
 
         [HttpPost]
+        public ActionResult ModificarUsuario(Usuario usuario)
+        {
+            var registro = baseDatos.Usuarios.Find(usuario.IdUsuario);
+            if (registro != null)
+            {
+                registro.NombresUsuario = usuario.NombresUsuario;
+                registro.CorreoUsuario = usuario.CorreoUsuario;
+                registro.ContraseñaUsuario = usuario.ContraseñaUsuario;
+                registro.TelefonoUsuario = usuario.TelefonoUsuario;
+                registro.RolUsuario = usuario.RolUsuario;
+                registro.EdadUsuario = usuario.EdadUsuario;
+                registro.GeneroUsuario = usuario.GeneroUsuario;
+                registro.IdSemillero = usuario.IdSemillero;
+                baseDatos.SaveChanges();
+            }
+            return RedirectToAction("Usuarios");
+        }
+
+
+        [HttpPost]
         public ActionResult EliminarUsuario(int id)// Recibe el ID del usuario que se desea eliminar de la base de datos
         {
             var registro = baseDatos.Usuarios.Find(id);// Busca el usuario existente en la base de datos por su ID

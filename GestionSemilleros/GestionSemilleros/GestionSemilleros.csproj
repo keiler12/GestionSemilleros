@@ -126,6 +126,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AdministradorController.cs" />
+    <Compile Include="Controllers\LiderController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -212,6 +213,12 @@
     <Content Include="Views\Administrador\Eventos.cshtml" />
     <Content Include="Views\Administrador\Patrocinadores.cshtml" />
     <Content Include="Views\Administrador\Reuniones.cshtml" />
+    <Content Include="Views\Lider\Index.cshtml" />
+    <Content Include="Views\Shared\_LayoutLider.cshtml" />
+    <Content Include="Views\Lider\MiSemillero.cshtml" />
+    <Content Include="Views\Lider\Investigadores.cshtml" />
+    <Content Include="Views\Lider\Proyectos.cshtml" />
+    <Content Include="Views\Lider\Reuniones.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

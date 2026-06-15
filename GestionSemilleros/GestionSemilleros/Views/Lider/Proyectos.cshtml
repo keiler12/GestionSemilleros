@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<GestionSemilleros.Models.Entidades.Proyecto>
 @{
     ViewBag.Title = "Proyectos";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_LayoutLider.cshtml";
     var proyectoActivo = ViewBag.ProyectoActivo as int?;
 }
 
@@ -14,14 +14,13 @@
 
 <div class="filtros-panel">
     <span class="filtros-label">Consultar por parámetros</span>
-    @using (Html.BeginForm("Proyectos", "Administrador", FormMethod.Get))
+    @using (Html.BeginForm("Proyectos", "Lider", FormMethod.Get))
     {
         <div class="filtros-fila">
             <span style="font-size:13px; font-weight:500; color:#374151; white-space:nowrap;">Selecciona la opción</span>
             <select name="filtroCampo" class="filtro-select" onchange="this.form.submit()">
                 <option value="">Selecciona...</option>
                 <option value="Titulo" @(ViewBag.FiltroCampo == "Titulo" ? "selected" : "")>Título</option>
-                <option value="Semillero" @(ViewBag.FiltroCampo == "Semillero" ? "selected" : "")>Semillero</option>
             </select>
             <select name="filtroValor" class="filtro-select">
                 <option value="">Todos</option>
@@ -33,7 +32,7 @@
             <button type="submit" class="btn-buscar">
                 <i class="bi bi-search"></i> Buscar
             </button>
-            <a href="@Url.Action("Proyectos", "Administrador")" class="btn-limpiar">
+            <a href="@Url.Action("Proyectos", "Lider")" class="btn-limpiar">
                 <i class="bi bi-eraser"></i> Limpiar
             </a>
         </div>
@@ -52,7 +51,6 @@
         <tr>
             <th>ID</th>
             <th>Título</th>
-            <th>Semillero</th>
             <th>Inicio</th>
             <th>Fin</th>
             <th>Acciones</th>
@@ -64,11 +62,10 @@
             <tr>
                 <td>@proyecto.IdProyecto</td>
                 <td>@proyecto.TituloProyecto</td>
-                <td>@proyecto.IdSemillero</td>
                 <td>@proyecto.FechaInicioProyecto.ToString("yyyy-MM-dd")</td>
                 <td>@proyecto.FechaFinProyecto.ToString("yyyy-MM-dd")</td>
                 <td class="acciones">
-                    <a href="@Url.Action("Proyectos", "Administrador", new { proyectoActivo = proyecto.IdProyecto })"
+                    <a href="@Url.Action("Proyectos", "Lider", new { proyectoActivo = proyecto.IdProyecto })"
                        class="btn-editar" style="background:#2ecc71;">
                         <i class="bi bi-list-ul"></i> Fases
                     </a>
@@ -80,11 +77,10 @@
                             data-objetivo="@proyecto.ObjetivoProyecto"
                             data-descripcion="@proyecto.DescripcionProyecto"
                             data-inicio="@proyecto.FechaInicioProyecto.ToString("yyyy-MM-dd")"
-                            data-fin="@proyecto.FechaFinProyecto.ToString("yyyy-MM-dd")"
-                            data-semillero="@proyecto.IdSemillero">
+                            data-fin="@proyecto.FechaFinProyecto.ToString("yyyy-MM-dd")">
                         <i class="bi bi-pencil-fill"></i> Editar
                     </button>
-                    @using (Html.BeginForm("EliminarProyecto", "Administrador", FormMethod.Post, new { style = "display:inline" }))
+                    @using (Html.BeginForm("EliminarProyecto", "Lider", FormMethod.Post, new { style = "display:inline" }))
                     {
                         @Html.Hidden("id", proyecto.IdProyecto)
                         <button type="submit" class="btn-eliminar"
@@ -139,7 +135,7 @@
                                     data-duracion="@fase.DuracionFase">
                                 <i class="bi bi-pencil-fill"></i>
                             </button>
-                            @using (Html.BeginForm("EliminarFase", "Administrador", FormMethod.Post, new { style = "display:inline" }))
+                            @using (Html.BeginForm("EliminarFase", "Lider", FormMethod.Post, new { style = "display:inline" }))
                             {
                                 @Html.Hidden("id", fase.IdFase)
                                 @Html.Hidden("proyectoId", proyectoActivo.Value)
@@ -165,7 +161,7 @@
                                         <span class="badge-fecha-nueva">
                                             <i class="bi bi-calendar3"></i> @actividad.FechaEntregaActividad.ToString("yyyy-MM-dd")
                                         </span>
-                                        @using (Html.BeginForm("EliminarActividad", "Administrador", FormMethod.Post, new { style = "display:inline" }))
+                                        @using (Html.BeginForm("EliminarActividad", "Lider", FormMethod.Post, new { style = "display:inline" }))
                                         {
                                             @Html.Hidden("id", actividad.IdActividad)
                                             @Html.Hidden("proyectoId", proyectoActivo.Value)
@@ -191,7 +187,7 @@
                         <h5 class="modal-title">Agregar fase</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
-                    @using (Html.BeginForm("RegistrarFase", "Administrador", FormMethod.Post))
+                    @using (Html.BeginForm("RegistrarFase", "Lider", FormMethod.Post))
                     {
                         @Html.Hidden("proyectoId", proyectoActivo.Value)
                         <div class="modal-body">
@@ -227,7 +223,7 @@
                         <h5 class="modal-title">Editar fase</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
-                    @using (Html.BeginForm("ModificarFase", "Administrador", FormMethod.Post))
+                    @using (Html.BeginForm("ModificarFase", "Lider", FormMethod.Post))
                     {
                         @Html.Hidden("proyectoId", proyectoActivo.Value)
                         <div class="modal-body">
@@ -237,7 +233,7 @@
                                 <input type="text" name="NombreFase" id="editFaseNombre" class="form-control" required />
                             </div>
                             <div class="campo-form">
-                                <label>Duración <small style="color:#6b7280;">(@ViewBag.SemanasTotal semanas totales del proyecto)</small></label>
+                                <label>Duración <small style="color:#6b7280;">(@ViewBag.SemanasTotal semanas totales)</small></label>
                                 <select name="DuracionFase" class="form-control" required>
                                     <option value="">Selecciona...</option>
                                     @for (int i = 1; i <= (int)(ViewBag.SemanasTotal ?? 0); i++)
@@ -264,7 +260,7 @@
                         <h5 class="modal-title">Agregar actividad</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
-                    @using (Html.BeginForm("RegistrarActividad", "Administrador", FormMethod.Post))
+                    @using (Html.BeginForm("RegistrarActividad", "Lider", FormMethod.Post))
                     {
                         @Html.Hidden("proyectoId", proyectoActivo.Value)
                         <div class="modal-body">
@@ -307,7 +303,7 @@
                 <h5 class="modal-title">Registrar proyecto</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            @using (Html.BeginForm("RegistrarProyecto", "Administrador", FormMethod.Post))
+            @using (Html.BeginForm("RegistrarProyecto", "Lider", FormMethod.Post))
             {
                 <div class="modal-body">
                     <div class="row g-3">
@@ -316,14 +312,8 @@
                             <input type="text" name="TituloProyecto" class="form-control" required />
                         </div>
                         <div class="col-md-6 campo-form">
-                            <label>Semillero</label>
-                            <select name="IdSemillero" class="form-control" required>
-                                <option value="">Selecciona...</option>
-                                @foreach (var semillero in ViewBag.Semilleros as IEnumerable<GestionSemilleros.Models.Entidades.Semillero>)
-                                {
-                                    <option value="@semillero.IdSemillero">@semillero.NombreSemillero</option>
-                                }
-                            </select>
+                            <label>Fecha inicio</label>
+                            <input type="date" name="FechaInicioProyecto" class="form-control" required />
                         </div>
                         <div class="col-md-12 campo-form">
                             <label>Objetivo</label>
@@ -332,10 +322,6 @@
                         <div class="col-md-12 campo-form">
                             <label>Descripción</label>
                             <input type="text" name="DescripcionProyecto" class="form-control" required />
-                        </div>
-                        <div class="col-md-6 campo-form">
-                            <label>Fecha inicio</label>
-                            <input type="date" name="FechaInicioProyecto" class="form-control" required />
                         </div>
                         <div class="col-md-6 campo-form">
                             <label>Fecha fin</label>
@@ -352,8 +338,6 @@
     </div>
 </div>
 
-
-
 <!-- Modal Editar Proyecto -->
 <div class="modal fade" id="modalEditarProyecto" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -362,7 +346,7 @@
                 <h5 class="modal-title">Editar proyecto</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            @using (Html.BeginForm("ModificarProyecto", "Administrador", FormMethod.Post))
+            @using (Html.BeginForm("ModificarProyecto", "Lider", FormMethod.Post))
             {
                 <div class="modal-body">
                     <input type="hidden" name="IdProyecto" id="editProyectoId" />
@@ -372,14 +356,8 @@
                             <input type="text" name="TituloProyecto" id="editProyectoTitulo" class="form-control" required />
                         </div>
                         <div class="col-md-6 campo-form">
-                            <label>Semillero</label>
-                            <select name="IdSemillero" id="editProyectoSemillero" class="form-control" required>
-                                <option value="">Selecciona...</option>
-                                @foreach (var semillero in ViewBag.Semilleros as IEnumerable<GestionSemilleros.Models.Entidades.Semillero>)
-                                {
-                                    <option value="@semillero.IdSemillero">@semillero.NombreSemillero</option>
-                                }
-                            </select>
+                            <label>Fecha inicio</label>
+                            <input type="date" name="FechaInicioProyecto" id="editProyectoInicio" class="form-control" required />
                         </div>
                         <div class="col-md-12 campo-form">
                             <label>Objetivo</label>
@@ -388,10 +366,6 @@
                         <div class="col-md-12 campo-form">
                             <label>Descripción</label>
                             <input type="text" name="DescripcionProyecto" id="editProyectoDescripcion" class="form-control" required />
-                        </div>
-                        <div class="col-md-6 campo-form">
-                            <label>Fecha inicio</label>
-                            <input type="date" name="FechaInicioProyecto" id="editProyectoInicio" class="form-control" required />
                         </div>
                         <div class="col-md-6 campo-form">
                             <label>Fecha fin</label>
@@ -410,45 +384,26 @@
 
 @section Scripts {
     <script>
-        document.getElementById('modalEditarProyecto').addEventListener('show.bs.modal', function (event) {
-            var boton = event.relatedTarget;
-            document.getElementById('editProyectoId').value = boton.getAttribute('data-id');
-            document.getElementById('editProyectoTitulo').value = boton.getAttribute('data-titulo');
-            document.getElementById('editProyectoObjetivo').value = boton.getAttribute('data-objetivo');
-            document.getElementById('editProyectoDescripcion').value = boton.getAttribute('data-descripcion');
-            document.getElementById('editProyectoInicio').value = boton.getAttribute('data-inicio');
-            document.getElementById('editProyectoFin').value = boton.getAttribute('data-fin');
-            document.getElementById('editProyectoSemillero').value = boton.getAttribute('data-semillero');
-        });
-
-        document.getElementById('modalEditarFase').addEventListener('show.bs.modal', function (event) {
-            var boton = event.relatedTarget;
-            document.getElementById('editFaseId').value = boton.getAttribute('data-id');
-            document.getElementById('editFaseNombre').value = boton.getAttribute('data-nombre');
-            document.getElementById('editFaseDuracion').value = boton.getAttribute('data-duracion');
-        });
-
-        document.querySelectorAll('[data-bs-target="#modalRegistrarActividad"]').forEach(function (boton) {
-            boton.addEventListener('click', function () {
-                document.getElementById('actividadFaseId').value = this.getAttribute('data-faseid');
-            });
-        });
-        function registrarProyecto() {
-    var datos = new URLSearchParams(new FormData(document.getElementById('formRegistrarProyecto')));
-    fetch('@Url.Action("RegistrarProyecto", "Administrador")', {
-        method: 'POST',
-        body: datos
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.exito) window.location.reload();
-        else {
-            document.getElementById('textoErrorProyecto').textContent = data.mensaje;
-            document.getElementById('errorRegistrarProyecto').style.display = 'block';
-        }
+    document.getElementById('modalEditarProyecto').addEventListener('show.bs.modal', function (event) {
+        var boton = event.relatedTarget;
+        document.getElementById('editProyectoId').value = boton.getAttribute('data-id');
+        document.getElementById('editProyectoTitulo').value = boton.getAttribute('data-titulo');
+        document.getElementById('editProyectoObjetivo').value = boton.getAttribute('data-objetivo');
+        document.getElementById('editProyectoDescripcion').value = boton.getAttribute('data-descripcion');
+        document.getElementById('editProyectoInicio').value = boton.getAttribute('data-inicio');
+        document.getElementById('editProyectoFin').value = boton.getAttribute('data-fin');
     });
-}
+
+    document.getElementById('modalEditarFase').addEventListener('show.bs.modal', function (event) {
+        var boton = event.relatedTarget;
+        document.getElementById('editFaseId').value = boton.getAttribute('data-id');
+        document.getElementById('editFaseNombre').value = boton.getAttribute('data-nombre');
+    });
+
+    document.querySelectorAll('[data-bs-target="#modalRegistrarActividad"]').forEach(function(boton) {
+        boton.addEventListener('click', function() {
+            document.getElementById('actividadFaseId').value = this.getAttribute('data-faseid');
+        });
+    });
     </script>
-
-
 }

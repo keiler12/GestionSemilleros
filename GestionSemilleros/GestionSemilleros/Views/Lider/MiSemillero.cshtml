@@ -1,0 +1,31 @@
+﻿@model GestionSemilleros.Models.Entidades.Semillero
+@{
+    ViewBag.Title = "Mi Semillero";
+    Layout = "~/Views/Shared/_LayoutLider.cshtml";
+}
+
+<div class="encabezado-modulo">
+    <h4>Información de mi Semillero</h4>
+</div>
+
+@if (Model != null)
+{
+    <div class="fase-item" style="max-width:500px;">
+        <div class="campo-form">
+            <label>Nombre</label>
+            <p style="font-size:14px; color:#1a1a2e;">@Model.NombreSemillero</p>
+        </div>
+        <div class="campo-form">
+            <label>Línea de investigación</label>
+            <p style="font-size:14px; color:#1a1a2e;">@Model.LineaSemillero</p>
+        </div>
+        <div class="campo-form">
+            <label>Enfoque</label>
+            <p style="font-size:14px; color:#1a1a2e;">@Model.EnfoqueSemillero</p>
+        </div>
+    </div>
+}
+else
+{
+    <p style="color:#6b7280;">No tienes un semillero asignado. Contacta al administrador.</p>
+}

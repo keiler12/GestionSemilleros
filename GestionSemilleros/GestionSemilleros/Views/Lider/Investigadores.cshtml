@@ -1,0 +1,222 @@
+﻿@model IEnumerable<GestionSemilleros.Models.Entidades.Usuario>
+@{
+    ViewBag.Title = "Investigadores";
+    Layout = "~/Views/Shared/_LayoutLider.cshtml";
+}
+
+<div class="filtros-panel">
+    <span class="filtros-label">Consultar por parámetros</span>
+    @using (Html.BeginForm("Investigadores", "Lider", FormMethod.Get))
+    {
+        <div class="filtros-fila">
+            <span style="font-size:13px; font-weight:500; color:#374151; white-space:nowrap;">Selecciona la opción</span>
+            <select name="filtroCampo" class="filtro-select" onchange="this.form.submit()">
+                <option value="">Selecciona...</option>
+                <option value="Nombre" @(ViewBag.FiltroCampo == "Nombre" ? "selected" : "")>Nombre</option>
+                <option value="Estado" @(ViewBag.FiltroCampo == "Estado" ? "selected" : "")>Estado</option>
+            </select>
+            <select name="filtroValor" class="filtro-select">
+                <option value="">Todos</option>
+                @foreach (var valor in ViewBag.ValoresFiltro as List<string>)
+                {
+                    <option value="@valor" @(ViewBag.FiltroValor == valor ? "selected" : "")>@valor</option>
+                }
+            </select>
+            <button type="submit" class="btn-buscar">
+                <i class="bi bi-search"></i> Buscar
+            </button>
+            <a href="@Url.Action("Investigadores", "Lider")" class="btn-limpiar">
+                <i class="bi bi-eraser"></i> Limpiar
+            </a>
+        </div>
+    }
+</div>
+
+<div class="encabezado-modulo">
+    <h4>Gestionar Investigadores</h4>
+    <button class="btn-registrar" data-bs-toggle="modal" data-bs-target="#modalRegistrar">
+        <i class="bi bi-plus-lg"></i> Registrar
+    </button>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombres</th>
+            <th>Correo</th>
+            <th>Teléfono</th>
+            <th>Edad</th>
+            <th>Género</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var investigador in Model)
+        {
+            <tr>
+                <td>@investigador.IdUsuario</td>
+                <td>@investigador.NombresUsuario</td>
+                <td>@investigador.CorreoUsuario</td>
+                <td>@investigador.TelefonoUsuario</td>
+                <td>@investigador.EdadUsuario</td>
+                <td>@investigador.GeneroUsuario</td>
+                <td>
+                    @using (Html.BeginForm("CambiarEstadoInvestigador", "Lider", FormMethod.Post, new { style = "display:inline" }))
+                    {
+                    @Html.Hidden("id", investigador.IdUsuario)
+                    <div class="form-check form-switch">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               @(investigador.EstadoUsuario == "Activo" ? "checked" : "")
+                               onchange="this.form.submit()" />
+                    </div>
+                    }
+                </td>
+                <td class="acciones">
+                    <button class="btn-editar"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalEditar"
+                            data-id="@investigador.IdUsuario"
+                            data-nombres="@investigador.NombresUsuario"
+                            data-correo="@investigador.CorreoUsuario"
+                            data-contrasena="@investigador.ContraseñaUsuario"
+                            data-telefono="@investigador.TelefonoUsuario"
+                            data-edad="@investigador.EdadUsuario"
+                            data-genero="@investigador.GeneroUsuario">
+                        <i class="bi bi-pencil-fill"></i> Editar
+                    </button>
+                    @using (Html.BeginForm("EliminarInvestigador", "Lider", FormMethod.Post, new { style = "display:inline" }))
+                    {
+                    @Html.Hidden("id", investigador.IdUsuario)
+                    <button type="submit" class="btn-eliminar"
+                            onclick="return confirm('¿Estás seguro de eliminar este investigador?')">
+                        <i class="bi bi-trash-fill"></i> Eliminar
+                    </button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Modal Registrar -->
+<div class="modal fade" id="modalRegistrar" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Registrar investigador</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            @using (Html.BeginForm("RegistrarInvestigador", "Lider", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6 campo-form">
+                            <label>Nombres completos</label>
+                            <input type="text" name="NombresUsuario" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 campo-form">
+                            <label>Correo electrónico</label>
+                            <input type="text" name="CorreoUsuario" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 campo-form">
+                            <label>Contraseña</label>
+                            <input type="password" name="ContraseñaUsuario" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 campo-form">
+                            <label>Teléfono</label>
+                            <input type="text" name="TelefonoUsuario" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 campo-form">
+                            <label>Edad</label>
+                            <input type="number" name="EdadUsuario" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 campo-form">
+                            <label>Género</label>
+                            <select name="GeneroUsuario" class="form-control">
+                                <option value="">Selecciona...</option>
+                                <option>Masculino</option>
+                                <option>Femenino</option>
+                                <option>Otro</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn-guardar">Guardar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar -->
+<div class="modal fade" id="modalEditar" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editar investigador</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            @using (Html.BeginForm("ModificarInvestigador", "Lider", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <input type="hidden" name="IdUsuario" id="editId" />
+                    <div class="row g-3">
+                        <div class="col-md-6 campo-form">
+                            <label>Nombres completos</label>
+                            <input type="text" name="NombresUsuario" id="editNombres" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 campo-form">
+                            <label>Correo electrónico</label>
+                            <input type="text" name="CorreoUsuario" id="editCorreo" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 campo-form">
+                            <label>Contraseña</label>
+                            <input type="password" name="ContraseñaUsuario" id="editContrasena" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 campo-form">
+                            <label>Teléfono</label>
+                            <input type="text" name="TelefonoUsuario" id="editTelefono" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 campo-form">
+                            <label>Edad</label>
+                            <input type="number" name="EdadUsuario" id="editEdad" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 campo-form">
+                            <label>Género</label>
+                            <select name="GeneroUsuario" id="editGenero" class="form-control">
+                                <option value="">Selecciona...</option>
+                                <option>Masculino</option>
+                                <option>Femenino</option>
+                                <option>Otro</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn-guardar">Guardar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+    document.getElementById('modalEditar').addEventListener('show.bs.modal', function (event) {
+        var boton = event.relatedTarget;
+        document.getElementById('editId').value = boton.getAttribute('data-id');
+        document.getElementById('editNombres').value = boton.getAttribute('data-nombres');
+        document.getElementById('editCorreo').value = boton.getAttribute('data-correo');
+        document.getElementById('editContrasena').value = boton.getAttribute('data-contrasena');
+        document.getElementById('editTelefono').value = boton.getAttribute('data-telefono');
+        document.getElementById('editEdad').value = boton.getAttribute('data-edad');
+        document.getElementById('editGenero').value = boton.getAttribute('data-genero');
+    });
+    </script>
+}

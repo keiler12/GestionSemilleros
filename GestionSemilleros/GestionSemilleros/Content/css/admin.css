@@ -242,6 +242,432 @@ tbody td {
         background: #378ADD;
     }
 
+.mensaje-error {
+    background: #fee2e2;
+    color: #b91c1c;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ===================== PANEL DE ASOCIACIONES (Eventos) ===================== */
+
+.panel-fases {
+    background: #f0f6fd;
+    border-radius: 12px;
+    padding: 1.25rem;
+    border: 0.5px solid #d1d5db;
+    margin-top: 1.5rem;
+}
+
+.panel-enc {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+    .panel-enc h5 {
+        font-size: 15px;
+        font-weight: 500;
+        color: #1a1a2e;
+        margin: 0;
+    }
+
+.fase-item {
+    background: #fff;
+    border-radius: 8px;
+    border: 0.5px solid #d1d5db;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.fase-enc {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.fase-nombre {
+    font-size: 13px;
+    font-weight: 500;
+    color: #1a1a2e;
+}
+
+.fase-duracion {
+    font-size: 11px;
+    color: #6b7280;
+    margin-top: 2px;
+}
+
+.actividades {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 0.5px solid #e5e7eb;
+}
+
+.actividad-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 0;
+    font-size: 12px;
+    color: #6b7280;
+    border-bottom: 0.5px solid #f3f4f6;
+}
+
+    .actividad-item:last-child {
+        border-bottom: none;
+    }
+
+.badge-fecha {
+    background: #E6F1FB;
+    color: #185FA5;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 20px;
+}
+
+/* ===================== ESTADOS DE REUNION ===================== */
+
+.badge-estado {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+    .badge-estado.pendiente {
+        background: #fef3c7;
+        color: #d97706;
+    }
+
+    .badge-estado.cancelada {
+        background: #fee2e2;
+        color: #b91c1c;
+    }
+
+    .badge-estado.realizada {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .badge-estado.en-curso {
+        background: #dbeafe;
+        color: #1d4ed8;
+    }
+
+/* ===================== FILTROS ===================== */
+
+.filtros-panel {
+    background: #fff;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    border: 0.5px solid #d1d5db;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.filtros-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #185FA5;
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.filtros-fila {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    width: 100%;
+}
+
+    .filtros-fila label {
+        font-size: 13px;
+        color: #374151;
+        font-weight: 500;
+        white-space: nowrap;
+        margin: 0;
+        padding-right: 0.5rem;
+    }
+
+.filtro-select {
+    flex: 1 1 180px !important;
+    max-width: 250px !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 8px !important;
+    padding: 8px 12px !important;
+    font-size: 13px !important;
+    color: #374151 !important;
+    background: #f9fafb !important;
+    box-shadow: none !important;
+}
+
+.btn-buscar {
+    background: #185FA5;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    text-decoration: none;
+    white-space: nowrap;
+    width: 110px;
+    box-shadow: 0 2px 6px rgba(24,95,165,0.3);
+}
+
+    .btn-buscar:hover {
+        background: #378ADD;
+        color: #fff;
+        text-decoration: none;
+    }
+
+.btn-limpiar {
+    background: #6b7280;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    white-space: nowrap;
+    width: 110px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+    .btn-limpiar:hover {
+        background: #4b5563;
+        color: #fff;
+        text-decoration: none;
+    }
+
+/* ===================== TARJETAS DE FASES Y ACTIVIDADES ===================== */
+
+.fase-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-left: 4px solid #185FA5;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.fase-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.fase-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.fase-avatar {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    border-radius: 50%;
+    background: #185FA5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 13px;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.fase-textos {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+    .fase-textos p {
+        margin: 0;
+        line-height: 1.3;
+    }
+
+.fase-titulo {
+    font-weight: 600;
+    font-size: 15px;
+    color: #1a1a2e;
+}
+
+.fase-subtitulo {
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 2px;
+}
+
+.fase-acciones {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.btn-actividad {
+    background: #185FA5;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+    .btn-actividad:hover {
+        background: #378ADD;
+    }
+
+.btn-icono {
+    background: #f3f4f6;
+    border: none;
+    border-radius: 6px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    cursor: pointer;
+    color: #374151;
+}
+
+    .btn-icono:hover {
+        background: #e5e7eb;
+    }
+
+.btn-icono-eliminar {
+    background: #fee2e2;
+    color: #b91c1c;
+    border: none;
+    border-radius: 6px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+    .btn-icono-eliminar:hover {
+        background: #fecaca;
+    }
+
+.actividades-lista {
+    padding-top: 0.75rem;
+    border-top: 1px solid #f3f4f6;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.actividad-fila {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f9fafb;
+    border-radius: 8px;
+    padding: 8px 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.actividad-fila-izq {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+    .actividad-fila-izq i {
+        font-size: 16px;
+        color: #185FA5;
+        flex-shrink: 0;
+    }
+
+.actividad-nombre {
+    font-size: 13px;
+    color: #1a1a2e;
+    font-weight: 500;
+}
+
+.actividad-fila-der {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.badge-fecha-nueva {
+    font-size: 11px;
+    background: #E6F1FB;
+    color: #185FA5;
+    padding: 4px 10px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.btn-eliminar-actividad {
+    background: #fee2e2;
+    border: none;
+    border-radius: 6px;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #b91c1c;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+    .btn-eliminar-actividad:hover {
+        background: #fecaca;
+    }
+
+/* ===================== RESPONSIVE ===================== */
+
 @media (max-width: 768px) {
     .sidebar {
         width: 100%;
@@ -306,185 +732,6 @@ tbody td {
         flex-direction: column;
     }
 
-
-    .panel-fases {
-        background: #f0f6fd;
-        border-radius: 12px;
-        padding: 1.25rem;
-        border: 0.5px solid #d1d5db;
-        margin-top: 1.5rem;
-    }
-
-    .panel-enc {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 1rem;
-    }
-
-        .panel-enc h5 {
-            font-size: 15px;
-            font-weight: 500;
-            color: #1a1a2e;
-            margin: 0;
-        }
-
-    .fase-item {
-        background: #fff;
-        border-radius: 8px;
-        border: 0.5px solid #d1d5db;
-        padding: 0.75rem 1rem;
-        margin-bottom: 0.75rem;
-    }
-
-    .fase-enc {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .fase-nombre {
-        font-size: 13px;
-        font-weight: 500;
-        color: #1a1a2e;
-    }
-
-    .fase-duracion {
-        font-size: 11px;
-        color: #6b7280;
-        margin-top: 2px;
-    }
-
-    .actividades {
-        margin-top: 0.75rem;
-        padding-top: 0.75rem;
-        border-top: 0.5px solid #e5e7eb;
-    }
-
-    .actividad-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 6px 0;
-        font-size: 12px;
-        color: #6b7280;
-        border-bottom: 0.5px solid #f3f4f6;
-    }
-
-        .actividad-item:last-child {
-            border-bottom: none;
-        }
-
-    .badge-fecha {
-        background: #E6F1FB;
-        color: #185FA5;
-        font-size: 11px;
-        padding: 2px 8px;
-        border-radius: 20px;
-    }
-}
-
-.filtros-panel {
-    background: #fff;
-    border-radius: 10px;
-    padding: 0.75rem 1rem;
-    border: 0.5px solid #d1d5db;
-    margin-bottom: 1.25rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.filtros-label {
-    display: block;
-    font-size: 12px;
-    font-weight: 600;
-    color: #185FA5;
-    margin-bottom: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.filtros-fila {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 0.75rem;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    width: 100%;
-}
-.filtro-select {
-    flex: 1 1 180px !important;
-    max-width: 250px !important;
-    border: 1px solid #d1d5db !important;
-    border-radius: 8px !important;
-    padding: 8px 12px !important;
-    font-size: 13px !important;
-    color: #374151 !important;
-    background: #f9fafb !important;
-    box-shadow: none !important;
-}
-.btn-buscar {
-    background: #185FA5;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: 9px 20px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    text-decoration: none;
-    white-space: nowrap;
-    width: 110px;
-    box-shadow: 0 2px 6px rgba(24,95,165,0.3);
-}
-
-    .btn-buscar:hover {
-        background: #378ADD;
-        color: #fff;
-        text-decoration: none;
-    }
-
-.btn-limpiar {
-    background: #6b7280;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: 9px 20px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    white-space: nowrap;
-    width: 110px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-}
-
-    .btn-limpiar:hover {
-        background: #4b5563;
-        color: #fff;
-        text-decoration: none;
-    }
-.filtros-fila label {
-    font-size: 13px;
-    color: #374151;
-    font-weight: 500;
-    white-space: nowrap;
-    margin: 0;
-    padding-right: 0.5rem;
-}
-
-
-@media (max-width: 768px) {
     .filtros-fila {
         flex-wrap: wrap;
     }
