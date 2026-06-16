@@ -1,11 +1,13 @@
-﻿using GestionSemilleros.Models.DAO;
+﻿using CrystalDecisions.CrystalReports.Engine;
+using CrystalDecisions.Shared;
+using GestionSemilleros.Models.DAO;
 using GestionSemilleros.Models.Entidades;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using System.Data.Entity;
 
 namespace GestionSemilleros.Controllers
 {
@@ -132,6 +134,22 @@ namespace GestionSemilleros.Controllers
 
             return View(lista.ToList());
         }
+
+        [HttpPost]
+        public ActionResult RegistrarUsuario(Usuario usuario)
+        {
+            // Validar que el teléfono solo contenga números
+            if (usuario.TelefonoUsuario.ToString().Any(c => !char.IsDigit(c)))
+            {
+                TempData["Error"] = "El teléfono solo puede contener números.";
+                return RedirectToAction("Usuarios");
+            }
+
+            baseDatos.Usuarios.Add(usuario);
+            baseDatos.SaveChanges();
+            return RedirectToAction("Usuarios");
+        }
+
 
         [HttpPost]
         public ActionResult CambiarEstado(int id)// Recibe el ID del usuario cuyo estado se desea cambiar
@@ -843,6 +861,155 @@ namespace GestionSemilleros.Controllers
             }
             return RedirectToAction("Reuniones");
         }
+
+        public ActionResult ReporteSemilleros()
+        {
+            if (Session["Rol"] == null || Session["Rol"].ToString() != "Administrador")
+                return RedirectToAction("Index", "Login");
+
+            var reporte = new ReportDocument();
+            var rutaReporte = Server.MapPath("~/Reportes/ReporteSemilleros.rpt");
+            reporte.Load(rutaReporte);
+
+            var dataSet = new ReporteSemillerosDataSet();
+            var tablaDatos = dataSet.Tables[0];
+
+            foreach (var semillero in baseDatos.Semilleros.ToList())
+            {
+                var fila = tablaDatos.NewRow();
+                fila["IdSemillero "] = semillero.IdSemillero;
+                fila["NombreSemillero"] = semillero.NombreSemillero;
+                fila["LineaSemillero "] = semillero.LineaSemillero;
+                fila["EnfoqueSemillero "] = semillero.EnfoqueSemillero;
+                tablaDatos.Rows.Add(fila);
+            }
+
+            reporte.SetDataSource(dataSet);
+
+            Response.Buffer = false;
+            var streamReporte = reporte.ExportToStream(ExportFormatType.PortableDocFormat);
+            return new FileStreamResult(streamReporte, "application/pdf");
+        }
+
+        public ActionResult ReporteUsuarios()
+        {
+            if (Session["Rol"] == null || Session["Rol"].ToString() != "Administrador")
+                return RedirectToAction("Index", "Login");
+
+            var reporte = new ReportDocument();
+            reporte.Load(Server.MapPath("~/Reportes/ReporteUsuarios.rpt"));
+
+            var dataSet = new ReporteUsuariosDataSet();
+            var tabla = dataSet.Tables[0];
+
+            foreach (var usuario in baseDatos.Usuarios.Include("Semillero").ToList())
+            {
+                var fila = tabla.NewRow();
+                fila["IdUsuario"] = usuario.IdUsuario;
+                fila["NombresUsuario"] = usuario.NombresUsuario;
+                fila["CorreoUsuario"] = usuario.CorreoUsuario;
+                fila["ContraseñaUsuario"] = usuario.ContraseñaUsuario;
+                fila["TelefonoUsuario"] = usuario.TelefonoUsuario;
+                fila["EdadUsuario"] = usuario.EdadUsuario;
+                fila["GeneroUsuario"] = usuario.GeneroUsuario;
+                fila["RolUsuario"] = usuario.RolUsuario;
+                fila["EstadoUsuario"] = usuario.EstadoUsuario;
+                fila["Semillero"] = usuario.Semillero != null ? usuario.Semillero.NombreSemillero : "Sin semillero";
+                tabla.Rows.Add(fila);
+            }
+
+            reporte.SetDataSource(dataSet);
+            Response.Buffer = false;
+            var stream = reporte.ExportToStream(ExportFormatType.PortableDocFormat);
+            return new FileStreamResult(stream, "application/pdf");
+        }
+
+        public ActionResult ReporteProyectos()
+        {
+            if (Session["Rol"] == null || Session["Rol"].ToString() != "Administrador")
+                return RedirectToAction("Index", "Login");
+
+            var reporte = new ReportDocument();
+            reporte.Load(Server.MapPath("~/Reportes/ReporteProyectos.rpt"));
+
+            var dataSet = new ReportesproyectosDataSet();
+            var tabla = dataSet.Tables[0];
+
+            foreach (var proyecto in baseDatos.Proyectos.Include("Semillero").ToList())
+            {
+                var fila = tabla.NewRow();
+                fila["IdProyecto"] = proyecto.IdProyecto;
+                fila["TituloProyecto"] = proyecto.TituloProyecto;
+                fila["ObjetivoProyecto"] = proyecto.ObjetivoProyecto;
+                fila["DescripcionProyecto"] = proyecto.DescripcionProyecto;
+                fila["FechaInicio"] = proyecto.FechaInicioProyecto.ToString("yyyy-MM-dd");
+                fila["FechaFin"] = proyecto.FechaFinProyecto.ToString("yyyy-MM-dd");
+                fila["Semillero"] = proyecto.Semillero != null ? proyecto.Semillero.NombreSemillero : "Sin semillero";
+                tabla.Rows.Add(fila);
+            }
+
+            reporte.SetDataSource(dataSet);
+            Response.Buffer = false;
+            var stream = reporte.ExportToStream(ExportFormatType.PortableDocFormat);
+            return new FileStreamResult(stream, "application/pdf");
+        }
+
+        public ActionResult ReporteFases()
+        {
+            if (Session["Rol"] == null || Session["Rol"].ToString() != "Administrador")
+                return RedirectToAction("Index", "Login");
+
+            var reporte = new ReportDocument();
+            reporte.Load(Server.MapPath("~/Reportes/ReporteFases.rpt"));
+
+            var dataSet = new ReporteFasesDataSet();
+            var tabla = dataSet.Tables[0];
+
+            foreach (var fase in baseDatos.Fases.Include("Proyecto").ToList())
+            {
+                var fila = tabla.NewRow();
+                fila["IdFase"] = fase.IdFase;
+                fila["NombreFase"] = fase.NombreFase;
+                fila["DuracionFase"] = fase.DuracionFase;
+                fila["Proyecto"] = fase.Proyecto != null ? fase.Proyecto.TituloProyecto : "Sin proyecto";
+                tabla.Rows.Add(fila);
+            }
+
+            reporte.SetDataSource(dataSet);
+            Response.Buffer = false;
+            var stream = reporte.ExportToStream(ExportFormatType.PortableDocFormat);
+            return new FileStreamResult(stream, "application/pdf");
+        }
+
+        public ActionResult ReporteActividades()
+        {
+            if (Session["Rol"] == null || Session["Rol"].ToString() != "Administrador")
+                return RedirectToAction("Index", "Login");
+
+            var reporte = new ReportDocument();
+            reporte.Load(Server.MapPath("~/Reportes/ReporteActividades.rpt"));
+
+            var dataSet = new ReporteActividadesDataSet();
+            var tabla = dataSet.Tables[0];
+
+            foreach (var actividad in baseDatos.Actividades.Include("Fase.Proyecto").ToList())
+            {
+                var fila = tabla.NewRow();
+                fila["IdActividad"] = actividad.IdActividad;
+                fila["NombreActividad"] = actividad.NombreActividad;
+                fila["DuracionActividad"] = actividad.DuracionActividad;
+                fila["FechaEntrega"] = actividad.FechaEntregaActividad.ToString("yyyy-MM-dd");
+                fila["Fase"] = actividad.Fase != null ? actividad.Fase.NombreFase : "Sin fase";
+                fila["Proyecto"] = actividad.Fase != null && actividad.Fase.Proyecto != null ? actividad.Fase.Proyecto.TituloProyecto : "Sin proyecto";
+                tabla.Rows.Add(fila);
+            }
+
+            reporte.SetDataSource(dataSet);
+            Response.Buffer = false;
+            var stream = reporte.ExportToStream(ExportFormatType.PortableDocFormat);
+            return new FileStreamResult(stream, "application/pdf");
+        }
+
     }
 
 }

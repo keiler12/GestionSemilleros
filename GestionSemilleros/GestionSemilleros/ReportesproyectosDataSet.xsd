@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ReportesproyectosDataSet" targetNamespace="http://tempuri.org/ReportesproyectosDataSet.xsd" xmlns:mstns="http://tempuri.org/ReportesproyectosDataSet.xsd" xmlns="http://tempuri.org/ReportesproyectosDataSet.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="ReportesproyectosDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_UserDSName="ReportesproyectosDataSet" msprop:Generator_DataSetName="ReportesproyectosDataSet">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="Proyectos" msprop:Generator_RowEvHandlerName="ProyectosRowChangeEventHandler" msprop:Generator_RowDeletedName="ProyectosRowDeleted" msprop:Generator_RowDeletingName="ProyectosRowDeleting" msprop:Generator_RowEvArgName="ProyectosRowChangeEvent" msprop:Generator_TablePropName="Proyectos" msprop:Generator_RowChangedName="ProyectosRowChanged" msprop:Generator_RowChangingName="ProyectosRowChanging" msprop:Generator_TableClassName="ProyectosDataTable" msprop:Generator_RowClassName="ProyectosRow" msprop:Generator_TableVarName="tableProyectos" msprop:Generator_UserTableName="Proyectos">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="IdProyecto" msprop:Generator_ColumnPropNameInRow="IdProyecto" msprop:Generator_ColumnPropNameInTable="IdProyectoColumn" msprop:Generator_ColumnVarNameInTable="columnIdProyecto" msprop:Generator_UserColumnName="IdProyecto" type="xs:string" minOccurs="0" />
+              <xs:element name="TituloProyecto" msprop:Generator_ColumnPropNameInRow="TituloProyecto" msprop:Generator_ColumnPropNameInTable="TituloProyectoColumn" msprop:Generator_ColumnVarNameInTable="columnTituloProyecto" msprop:Generator_UserColumnName="TituloProyecto" type="xs:string" minOccurs="0" />
+              <xs:element name="ObjetivoProyecto" msprop:Generator_ColumnPropNameInRow="ObjetivoProyecto" msprop:Generator_ColumnPropNameInTable="ObjetivoProyectoColumn" msprop:Generator_ColumnVarNameInTable="columnObjetivoProyecto" msprop:Generator_UserColumnName="ObjetivoProyecto" type="xs:string" minOccurs="0" />
+              <xs:element name="DescripcionProyecto" msprop:Generator_ColumnPropNameInRow="DescripcionProyecto" msprop:Generator_ColumnPropNameInTable="DescripcionProyectoColumn" msprop:Generator_ColumnVarNameInTable="columnDescripcionProyecto" msprop:Generator_UserColumnName="DescripcionProyecto" type="xs:string" minOccurs="0" />
+              <xs:element name="FechaInicio" msprop:Generator_ColumnPropNameInRow="FechaInicio" msprop:Generator_ColumnPropNameInTable="FechaInicioColumn" msprop:Generator_ColumnVarNameInTable="columnFechaInicio" msprop:Generator_UserColumnName="FechaInicio" type="xs:string" minOccurs="0" />
+              <xs:element name="FechaFin" msprop:Generator_ColumnPropNameInRow="FechaFin" msprop:Generator_ColumnPropNameInTable="FechaFinColumn" msprop:Generator_ColumnVarNameInTable="columnFechaFin" msprop:Generator_UserColumnName="FechaFin" type="xs:string" minOccurs="0" />
+              <xs:element name="Semillero" msprop:Generator_ColumnPropNameInRow="Semillero" msprop:Generator_ColumnPropNameInTable="SemilleroColumn" msprop:Generator_ColumnVarNameInTable="columnSemillero" msprop:Generator_UserColumnName="Semillero" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

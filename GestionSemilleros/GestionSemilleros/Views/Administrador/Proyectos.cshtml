@@ -42,9 +42,14 @@
 
 <div class="encabezado-modulo">
     <h4>Gestionar Proyectos</h4>
-    <button class="btn-registrar" data-bs-toggle="modal" data-bs-target="#modalRegistrarProyecto">
-        <i class="bi bi-plus-lg"></i> Registrar
-    </button>
+    <div style="display:flex; gap:8px;">
+        <button class="btn-registrar" data-bs-toggle="modal" data-bs-target="#modalRegistrarProyecto">
+            <i class="bi bi-plus-lg"></i> Registrar
+        </button>
+        <a href="@Url.Action("ReporteProyectos", "Administrador")" target="_blank" class="btn-registrar" style="background:#E24B4A;">
+            <i class="bi bi-file-pdf-fill"></i> Reporte PDF
+        </a>
+    </div>
 </div>
 
 <table>
@@ -104,16 +109,25 @@
     if (proyecto != null)
     {
         <div class="panel-fases">
-            <div class="panel-enc">
-                <h5>Fases de: @proyecto.TituloProyecto</h5>
-                <button class="btn-registrar" style="font-size:12px; padding:6px 14px;"
-                        data-bs-toggle="modal"
-                        data-bs-target="#modalRegistrarFase">
-                    <i class="bi bi-plus-lg"></i> Agregar fase
-                </button>
-            </div>
+          <div class="panel-enc">
+              <h5>Fases de: @proyecto.TituloProyecto</h5>
+              <div style="display:flex; gap:8px;">
+                  <button class="btn-registrar" style="font-size:12px; padding:6px 14px;"
+                          data-bs-toggle="modal"
+                          data-bs-target="#modalRegistrarFase">
+                      <i class="bi bi-plus-lg"></i> Agregar fase
+                  </button>
+                  <a href="@Url.Action("ReporteFases", "Administrador")" target="_blank" class="btn-registrar" style="font-size:12px; padding:6px 14px; background:#E24B4A;">
+                      <i class="bi bi-file-pdf-fill"></i> Reporte Fases
+                  </a>
+                  <a href="@Url.Action("ReporteActividades", "Administrador")" target="_blank" class="btn-registrar" style="font-size:12px; padding:6px 14px; background:#E24B4A;">
+                      <i class="bi bi-file-pdf-fill"></i> Reporte Actividades
+                  </a>
+              </div>
+          </div>
+           </div>
 
-            @foreach (var fase in proyecto.Fases)
+            foreach (var fase in proyecto.Fases)
             {
                 <div class="fase-card">
                     <div class="fase-card-header">
@@ -181,7 +195,7 @@
                     }
                 </div>
             }
-        </div>
+       
 
         <!-- Modal Registrar Fase -->
         <div class="modal fade" id="modalRegistrarFase" tabindex="-1">

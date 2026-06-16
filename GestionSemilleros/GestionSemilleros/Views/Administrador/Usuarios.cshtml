@@ -36,9 +36,14 @@
 
 <div class="encabezado-modulo">
     <h4>Gestionar Usuarios</h4>
-    <button class="btn-registrar" data-bs-toggle="modal" data-bs-target="#modalRegistrar">
-        <i class="bi bi-plus-lg"></i> Registrar
-    </button>
+    <div style="display:flex; gap:8px;">
+        <button class="btn-registrar" data-bs-toggle="modal" data-bs-target="#modalRegistrar">
+            <i class="bi bi-plus-lg"></i> Registrar
+        </button>
+        <a href="@Url.Action("ReporteUsuarios", "Administrador")" target="_blank" class="btn-registrar" style="background:#E24B4A;">
+            <i class="bi bi-file-pdf-fill"></i> Reporte PDF
+        </a>
+    </div>
 </div>
 
 <table>
@@ -141,7 +146,7 @@
                         </div>
                         <div class="col-md-6 campo-form">
                             <label>Teléfono</label>
-                            <input type="text" name="TelefonoUsuario" class="form-control" required />
+                            <input type="tel" name="TelefonoUsuario" class="form-control" pattern="[0-9]*" title="Solo números" required />
                         </div>
                         <div class="col-md-6 campo-form">
                             <label>Rol</label>
@@ -227,6 +232,7 @@
                             <label>Edad</label>
                             <input type="number" name="EdadUsuario" id="editEdad" class="form-control" required />
                         </div>
+
                         <div class="col-md-6 campo-form">
                             <label>Género</label>
                             <select name="GeneroUsuario" id="editGenero" class="form-control">

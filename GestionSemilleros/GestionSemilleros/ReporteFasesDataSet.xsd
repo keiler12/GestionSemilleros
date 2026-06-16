@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ReporteFasesDataSet" targetNamespace="http://tempuri.org/ReporteFasesDataSet.xsd" xmlns:mstns="http://tempuri.org/ReporteFasesDataSet.xsd" xmlns="http://tempuri.org/ReporteFasesDataSet.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="ReporteFasesDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_UserDSName="ReporteFasesDataSet" msprop:Generator_DataSetName="ReporteFasesDataSet">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="Fases" msprop:Generator_RowEvHandlerName="FasesRowChangeEventHandler" msprop:Generator_RowDeletedName="FasesRowDeleted" msprop:Generator_RowDeletingName="FasesRowDeleting" msprop:Generator_RowEvArgName="FasesRowChangeEvent" msprop:Generator_TablePropName="Fases" msprop:Generator_RowChangedName="FasesRowChanged" msprop:Generator_RowChangingName="FasesRowChanging" msprop:Generator_TableClassName="FasesDataTable" msprop:Generator_RowClassName="FasesRow" msprop:Generator_TableVarName="tableFases" msprop:Generator_UserTableName="Fases">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="IdFase" msprop:Generator_ColumnPropNameInRow="IdFase" msprop:Generator_ColumnPropNameInTable="IdFaseColumn" msprop:Generator_ColumnVarNameInTable="columnIdFase" msprop:Generator_UserColumnName="IdFase" type="xs:string" minOccurs="0" />
+              <xs:element name="NombreFase" msprop:Generator_ColumnPropNameInRow="NombreFase" msprop:Generator_ColumnPropNameInTable="NombreFaseColumn" msprop:Generator_ColumnVarNameInTable="columnNombreFase" msprop:Generator_UserColumnName="NombreFase" type="xs:string" minOccurs="0" />
+              <xs:element name="DuracionFase" msprop:Generator_ColumnPropNameInRow="DuracionFase" msprop:Generator_ColumnPropNameInTable="DuracionFaseColumn" msprop:Generator_ColumnVarNameInTable="columnDuracionFase" msprop:Generator_UserColumnName="DuracionFase" type="xs:string" minOccurs="0" />
+              <xs:element name="Proyecto" msprop:Generator_ColumnPropNameInRow="Proyecto" msprop:Generator_ColumnPropNameInTable="ProyectoColumn" msprop:Generator_ColumnVarNameInTable="columnProyecto" msprop:Generator_UserColumnName="Proyecto" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

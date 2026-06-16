@@ -28,6 +28,7 @@
             </button>
             <a href="@Url.Action("Semilleros", "Administrador")" class="btn-limpiar">
                 <i class="bi bi-eraser"></i> Limpiar
+
             </a>
         </div>
     }
@@ -35,9 +36,14 @@
 
 <div class="encabezado-modulo">
     <h4>Gestionar Semilleros</h4>
-    <button class="btn-registrar" data-bs-toggle="modal" data-bs-target="#modalRegistrar">
-        <i class="bi bi-plus-lg"></i> Registrar
-    </button>
+    <div style="display:flex; gap:8px;">
+        <button class="btn-registrar" data-bs-toggle="modal" data-bs-target="#modalRegistrar">
+            <i class="bi bi-plus-lg"></i> Registrar
+        </button>
+        <a href="@Url.Action("ReporteSemilleros", "Administrador")" target="_blank" class="btn-registrar" style="background:#E24B4A;">
+            <i class="bi bi-file-pdf-fill"></i> Reporte PDF
+        </a>
+    </div>
 </div>
 
 <table>
