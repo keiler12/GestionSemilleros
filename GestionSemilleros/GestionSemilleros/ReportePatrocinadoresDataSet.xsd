@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ReportePatrocinadoresDataSet" targetNamespace="http://tempuri.org/ReportePatrocinadoresDataSet.xsd" xmlns:mstns="http://tempuri.org/ReportePatrocinadoresDataSet.xsd" xmlns="http://tempuri.org/ReportePatrocinadoresDataSet.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="ReportePatrocinadoresDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_UserDSName="ReportePatrocinadoresDataSet" msprop:Generator_DataSetName="ReportePatrocinadoresDataSet">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="Patrocinadores" msprop:Generator_RowEvHandlerName="PatrocinadoresRowChangeEventHandler" msprop:Generator_RowDeletedName="PatrocinadoresRowDeleted" msprop:Generator_RowDeletingName="PatrocinadoresRowDeleting" msprop:Generator_RowEvArgName="PatrocinadoresRowChangeEvent" msprop:Generator_TablePropName="Patrocinadores" msprop:Generator_RowChangedName="PatrocinadoresRowChanged" msprop:Generator_RowChangingName="PatrocinadoresRowChanging" msprop:Generator_TableClassName="PatrocinadoresDataTable" msprop:Generator_RowClassName="PatrocinadoresRow" msprop:Generator_TableVarName="tablePatrocinadores" msprop:Generator_UserTableName="Patrocinadores">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="IdPatrocinador" msprop:Generator_ColumnPropNameInRow="IdPatrocinador" msprop:Generator_ColumnPropNameInTable="IdPatrocinadorColumn" msprop:Generator_ColumnVarNameInTable="columnIdPatrocinador" msprop:Generator_UserColumnName="IdPatrocinador" type="xs:string" minOccurs="0" />
+              <xs:element name="NombrePatrocinador" msprop:Generator_ColumnPropNameInRow="NombrePatrocinador" msprop:Generator_ColumnPropNameInTable="NombrePatrocinadorColumn" msprop:Generator_ColumnVarNameInTable="columnNombrePatrocinador" msprop:Generator_UserColumnName="NombrePatrocinador" type="xs:string" minOccurs="0" />
+              <xs:element name="TipoPatrocinador" msprop:Generator_ColumnPropNameInRow="TipoPatrocinador" msprop:Generator_ColumnPropNameInTable="TipoPatrocinadorColumn" msprop:Generator_ColumnVarNameInTable="columnTipoPatrocinador" msprop:Generator_UserColumnName="TipoPatrocinador" type="xs:string" minOccurs="0" />
+              <xs:element name="ContactoPatrocinador" msprop:Generator_ColumnPropNameInRow="ContactoPatrocinador" msprop:Generator_ColumnPropNameInTable="ContactoPatrocinadorColumn" msprop:Generator_ColumnVarNameInTable="columnContactoPatrocinador" msprop:Generator_UserColumnName="ContactoPatrocinador" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

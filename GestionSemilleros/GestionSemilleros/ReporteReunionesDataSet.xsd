@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ReporteEventosDataSet" targetNamespace="http://tempuri.org/ReporteEventosDataSet.xsd" xmlns:mstns="http://tempuri.org/ReporteEventosDataSet.xsd" xmlns="http://tempuri.org/ReporteEventosDataSet.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="ReporteEventosDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_UserDSName="ReporteEventosDataSet" msprop:Generator_DataSetName="ReporteEventosDataSet">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="Reuniones" msprop:Generator_RowEvHandlerName="ReunionesRowChangeEventHandler" msprop:Generator_RowDeletedName="ReunionesRowDeleted" msprop:Generator_RowDeletingName="ReunionesRowDeleting" msprop:Generator_RowEvArgName="ReunionesRowChangeEvent" msprop:Generator_TablePropName="Reuniones" msprop:Generator_RowChangedName="ReunionesRowChanged" msprop:Generator_RowChangingName="ReunionesRowChanging" msprop:Generator_TableClassName="ReunionesDataTable" msprop:Generator_RowClassName="ReunionesRow" msprop:Generator_TableVarName="tableReuniones" msprop:Generator_UserTableName="Reuniones">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="IdReunion" msprop:Generator_ColumnPropNameInRow="IdReunion" msprop:Generator_ColumnPropNameInTable="IdReunionColumn" msprop:Generator_ColumnVarNameInTable="columnIdReunion" msprop:Generator_UserColumnName="IdReunion" type="xs:int" minOccurs="0" />
+              <xs:element name="TipoReunion" msprop:Generator_ColumnPropNameInRow="TipoReunion" msprop:Generator_ColumnPropNameInTable="TipoReunionColumn" msprop:Generator_ColumnVarNameInTable="columnTipoReunion" msprop:Generator_UserColumnName="TipoReunion" type="xs:string" minOccurs="0" />
+              <xs:element name="MotivoReunion" msprop:Generator_ColumnPropNameInRow="MotivoReunion" msprop:Generator_ColumnPropNameInTable="MotivoReunionColumn" msprop:Generator_ColumnVarNameInTable="columnMotivoReunion" msprop:Generator_UserColumnName="MotivoReunion" type="xs:string" minOccurs="0" />
+              <xs:element name="FechaReunion" msprop:Generator_ColumnPropNameInRow="FechaReunion" msprop:Generator_ColumnPropNameInTable="FechaReunionColumn" msprop:Generator_ColumnVarNameInTable="columnFechaReunion" msprop:Generator_UserColumnName="FechaReunion" type="xs:string" minOccurs="0" />
+              <xs:element name="HoraInicio" msprop:Generator_ColumnPropNameInRow="HoraInicio" msprop:Generator_ColumnPropNameInTable="HoraInicioColumn" msprop:Generator_ColumnVarNameInTable="columnHoraInicio" msprop:Generator_UserColumnName="HoraInicio" type="xs:string" minOccurs="0" />
+              <xs:element name="HoraFin" msprop:Generator_ColumnPropNameInRow="HoraFin" msprop:Generator_ColumnPropNameInTable="HoraFinColumn" msprop:Generator_ColumnVarNameInTable="columnHoraFin" msprop:Generator_UserColumnName="HoraFin" type="xs:string" minOccurs="0" />
+              <xs:element name="EstadoReunion" msprop:Generator_ColumnPropNameInRow="EstadoReunion" msprop:Generator_ColumnPropNameInTable="EstadoReunionColumn" msprop:Generator_ColumnVarNameInTable="columnEstadoReunion" msprop:Generator_UserColumnName="EstadoReunion" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

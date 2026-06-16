@@ -862,6 +862,18 @@ namespace GestionSemilleros.Controllers
             return RedirectToAction("Reuniones");
         }
 
+        [HttpPost]
+        public ActionResult CancelarReunion(int id)
+        {
+            var registro = baseDatos.Reuniones.Find(id);
+            if (registro != null && registro.EstadoReunion == "Pendiente")
+            {
+                registro.EstadoReunion = "Cancelada";
+                baseDatos.SaveChanges();
+            }
+            return RedirectToAction("Reuniones");
+        }
+
         public ActionResult ReporteSemilleros()
         {
             if (Session["Rol"] == null || Session["Rol"].ToString() != "Administrador")
@@ -1001,6 +1013,97 @@ namespace GestionSemilleros.Controllers
                 fila["FechaEntrega"] = actividad.FechaEntregaActividad.ToString("yyyy-MM-dd");
                 fila["Fase"] = actividad.Fase != null ? actividad.Fase.NombreFase : "Sin fase";
                 fila["Proyecto"] = actividad.Fase != null && actividad.Fase.Proyecto != null ? actividad.Fase.Proyecto.TituloProyecto : "Sin proyecto";
+                tabla.Rows.Add(fila);
+            }
+
+            reporte.SetDataSource(dataSet);
+            Response.Buffer = false;
+            var stream = reporte.ExportToStream(ExportFormatType.PortableDocFormat);
+            return new FileStreamResult(stream, "application/pdf");
+        }
+
+        public ActionResult ReporteEventos()
+        {
+            if (Session["Rol"] == null || Session["Rol"].ToString() != "Administrador")
+                return RedirectToAction("Index", "Login");
+
+            var reporte = new ReportDocument();
+            reporte.Load(Server.MapPath("~/Reportes/ReportesEventos.rpt"));
+
+            var dataSet = new ReportesEventosDataSet();
+            var tabla = dataSet.Tables[0];
+
+            foreach (var eventos in baseDatos.Eventos.ToList())
+            {
+                var fila = tabla.NewRow();
+                fila["IdEvento"] = eventos.IdEvento;
+                fila["LugarEvento"] = eventos.LugarEvento;
+                fila["NombreEvent"] = eventos.NombreEvento;
+                fila["TipoEvento"] = eventos.TipoEvento;
+                fila["FechaEvento"] = eventos.FechaEvento.ToString("yyyy-MM-dd");
+                fila["OrganizadorEvento"] = eventos.OrganizadorEvento;
+                tabla.Rows.Add(fila);
+            }
+
+            reporte.SetDataSource(dataSet);
+            Response.Buffer = false;
+            var stream = reporte.ExportToStream(ExportFormatType.PortableDocFormat);
+            return new FileStreamResult(stream, "application/pdf");
+        }
+
+        public ActionResult ReporteReuniones()
+        {
+            if (Session["Rol"] == null || Session["Rol"].ToString() != "Administrador")
+                return RedirectToAction("Index", "Login");
+
+            ActualizarEstadosReuniones();
+
+            var reporte = new ReportDocument();
+            reporte.Load(Server.MapPath("~/Reportes/ReporteReuniones.rpt"));
+
+            var dataSet = new ReporteEventosDataSet();
+            var tabla = dataSet.Tables[0];
+
+            foreach (var reunion in baseDatos.Reuniones.ToList())
+            {
+                var horaFin = reunion.HoraReunion.Add(TimeSpan.FromMinutes(reunion.DuracionMinutos));
+
+                var fila = tabla.NewRow();
+                fila["IdReunion"] = reunion.IdReunion;
+                fila["TipoReunion"] = reunion.TipoReunion;
+                fila["MotivoReunion"] = reunion.MotivoReunion;
+                fila["FechaReunion"] = reunion.FechaReunion.ToString("yyyy-MM-dd");
+                fila["HoraInicio"] = reunion.HoraReunion.ToString(@"hh\:mm");
+                fila["HoraFin"] = horaFin.ToString(@"hh\:mm");
+                fila["EstadoReunion"] = reunion.EstadoReunion;
+                tabla.Rows.Add(fila);
+            }
+
+            reporte.SetDataSource(dataSet);
+            Response.Buffer = false;
+            var stream = reporte.ExportToStream(ExportFormatType.PortableDocFormat);
+            return new FileStreamResult(stream, "application/pdf");
+        }
+
+        public ActionResult ReportePatrocinadores()
+        {
+            if (Session["Rol"] == null || Session["Rol"].ToString() != "Administrador")
+                return RedirectToAction("Index", "Login");
+
+            var reporte = new ReportDocument();
+            reporte.Load(Server.MapPath("~/Reportes/ReportePatrocinador.rpt"));
+
+            var dataSet = new ReportePatrocinadoresDataSet();
+            var tabla = dataSet.Tables[0];
+
+            foreach (var patro in baseDatos.Patrocinadores.ToList())
+            {
+                var fila = tabla.NewRow();
+                fila["IdPatrocinador"] = patro.IdPatrocinador;
+                fila["NombrePatrocinador"] = patro.NombrePatrocinador;
+                fila["TipoPatrocinador"] = patro.TipoPatrocinador;
+                fila["TelefonoPatrocinador"] = patro.TelefonoPatrocinador;
+                
                 tabla.Rows.Add(fila);
             }
 

@@ -1,0 +1,114 @@
+﻿@model IEnumerable<GestionSemilleros.Models.Entidades.Proyecto>
+@{
+    ViewBag.Title = "Proyectos";
+    Layout = "~/Views/Shared/_LayoutInvestigador.cshtml";
+    var proyectoActivo = ViewBag.ProyectoActivo as int?;
+}
+
+<div class="filtros-panel">
+    <span class="filtros-label">Consultar por parámetros</span>
+    @using (Html.BeginForm("Proyectos", "Investigador", FormMethod.Get))
+    {
+        <div class="filtros-fila">
+            <span style="font-size:13px; font-weight:500; color:#374151; white-space:nowrap;">Selecciona la opción</span>
+            <select name="filtroCampo" class="filtro-select" onchange="this.form.submit()">
+                <option value="">Selecciona...</option>
+                <option value="Titulo" @(ViewBag.FiltroCampo == "Titulo" ? "selected" : "")>Título</option>
+            </select>
+            <select name="filtroValor" class="filtro-select">
+                <option value="">Todos</option>
+                @foreach (var valor in ViewBag.ValoresFiltro as List<string>)
+                {
+                    <option value="@valor" @(ViewBag.FiltroValor == valor ? "selected" : "")>@valor</option>
+                }
+            </select>
+            <button type="submit" class="btn-buscar">
+                <i class="bi bi-search"></i> Buscar
+            </button>
+            <a href="@Url.Action("Proyectos", "Investigador")" class="btn-limpiar">
+                <i class="bi bi-eraser"></i> Limpiar
+            </a>
+        </div>
+    }
+</div>
+
+<div class="encabezado-modulo">
+    <h4>Proyectos de mi Semillero</h4>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Inicio</th>
+            <th>Fin</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var proyecto in Model)
+        {
+            <tr>
+                <td>@proyecto.IdProyecto</td>
+                <td>@proyecto.TituloProyecto</td>
+                <td>@proyecto.FechaInicioProyecto.ToString("yyyy-MM-dd")</td>
+                <td>@proyecto.FechaFinProyecto.ToString("yyyy-MM-dd")</td>
+                <td class="acciones">
+                    <a href="@Url.Action("Proyectos", "Investigador", new { proyectoActivo = proyecto.IdProyecto, filtroCampo = ViewBag.FiltroCampo, filtroValor = ViewBag.FiltroValor })"
+                       class="btn-editar" style="background:#2ecc71;">
+                        <i class="bi bi-list-ul"></i> Ver fases
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (proyectoActivo.HasValue)
+{
+    var proyecto = Model.FirstOrDefault(p => p.IdProyecto == proyectoActivo.Value);
+    if (proyecto != null)
+    {
+        <div class="panel-fases">
+            <div class="panel-enc">
+                <h5>Fases de: @proyecto.TituloProyecto</h5>
+            </div>
+
+            @foreach (var fase in proyecto.Fases)
+            {
+                <div class="fase-card">
+                    <div class="fase-card-header">
+                        <div class="fase-info">
+                            <div class="fase-avatar">F@(proyecto.Fases.ToList().IndexOf(fase) + 1)</div>
+                            <div class="fase-textos">
+                                <p class="fase-titulo">@fase.NombreFase</p>
+                                <p class="fase-subtitulo">Duración: @fase.DuracionFase semana@(fase.DuracionFase > 1 ? "s" : "")</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (fase.Actividades.Any())
+                    {
+                        <div class="actividades-lista">
+                            @foreach (var actividad in fase.Actividades)
+                            {
+                                <div class="actividad-fila">
+                                    <div class="actividad-fila-izq">
+                                        <i class="bi bi-check2-square"></i>
+                                        <span class="actividad-nombre">@actividad.NombreActividad</span>
+                                    </div>
+                                    <div class="actividad-fila-der">
+                                        <span class="badge-fecha-nueva">
+                                            <i class="bi bi-calendar3"></i> @actividad.FechaEntregaActividad.ToString("yyyy-MM-dd")
+                                        </span>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+}

@@ -36,255 +36,260 @@
 
 <div class="encabezado-modulo">
     <h4>Gestionar Eventos</h4>
-    <button class="btn-registrar" data-bs-toggle="modal" data-bs-target="#modalRegistrarEvento">
-        <i class="bi bi-plus-lg"></i> Registrar
-    </button>
-</div>
+    <div style="display:flex; gap:8px;">
+        <button class="btn-registrar" data-bs-toggle="modal" data-bs-target="#modalRegistrarEvento">
+            <i class="bi bi-plus-lg"></i> Registrar
+        </button>
+        <a href="@Url.Action("ReporteEventos", "Administrador")" target="_blank" class="btn-registrar" style="background:#E24B4A;">
+            <i class="bi bi-file-pdf-fill"></i> Reporte PDF
+        </a>
+    </div>
+    </div>
 
-<table>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Tipo</th>
-            <th>Lugar</th>
-            <th>Fecha</th>
-            <th>Organizador</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var evento in Model)
-        {
+    <table>
+        <thead>
             <tr>
-                <td>@evento.IdEvento</td>
-                <td>@evento.NombreEvento</td>
-                <td>@evento.TipoEvento</td>
-                <td>@evento.LugarEvento</td>
-                <td>@evento.FechaEvento.ToString("yyyy-MM-dd")</td>
-                <td>@evento.OrganizadorEvento</td>
-                <td class="acciones">
-                    <a href="@Url.Action("Eventos", "Administrador", new { eventoActivo = evento.IdEvento })"
-                       class="btn-editar" style="background:#2ecc71;">
-                        <i class="bi bi-link-45deg"></i> Asociaciones
-                    </a>
-                    <button class="btn-editar"
-                            data-bs-toggle="modal"
-                            data-bs-target="#modalEditarEvento"
-                            data-id="@evento.IdEvento"
-                            data-nombre="@evento.NombreEvento"
-                            data-tipo="@evento.TipoEvento"
-                            data-lugar="@evento.LugarEvento"
-                            data-fecha="@evento.FechaEvento.ToString("yyyy-MM-dd")"
-                            data-organizador="@evento.OrganizadorEvento">
-                        <i class="bi bi-pencil-fill"></i> Editar
-                    </button>
-                    @using (Html.BeginForm("EliminarEvento", "Administrador", FormMethod.Post, new { style = "display:inline" }))
-                    {
-                        @Html.Hidden("id", evento.IdEvento)
-                        <button type="submit" class="btn-eliminar"
-                                onclick="return confirm('¿Estás seguro de eliminar este evento?')">
-                            <i class="bi bi-trash-fill"></i> Eliminar
-                        </button>
-                    }
-                </td>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Tipo</th>
+                <th>Lugar</th>
+                <th>Fecha</th>
+                <th>Organizador</th>
+                <th>Acciones</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var evento in Model)
+            {
+                <tr>
+                    <td>@evento.IdEvento</td>
+                    <td>@evento.NombreEvento</td>
+                    <td>@evento.TipoEvento</td>
+                    <td>@evento.LugarEvento</td>
+                    <td>@evento.FechaEvento.ToString("yyyy-MM-dd")</td>
+                    <td>@evento.OrganizadorEvento</td>
+                    <td class="acciones">
+                        <a href="@Url.Action("Eventos", "Administrador", new { eventoActivo = evento.IdEvento })"
+                           class="btn-editar" style="background:#2ecc71;">
+                            <i class="bi bi-link-45deg"></i> Asociaciones
+                        </a>
+                        <button class="btn-editar"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalEditarEvento"
+                                data-id="@evento.IdEvento"
+                                data-nombre="@evento.NombreEvento"
+                                data-tipo="@evento.TipoEvento"
+                                data-lugar="@evento.LugarEvento"
+                                data-fecha="@evento.FechaEvento.ToString("yyyy-MM-dd")"
+                                data-organizador="@evento.OrganizadorEvento">
+                            <i class="bi bi-pencil-fill"></i> Editar
+                        </button>
+                        @using (Html.BeginForm("EliminarEvento", "Administrador", FormMethod.Post, new { style = "display:inline" }))
+                        {
+                            @Html.Hidden("id", evento.IdEvento)
+                            <button type="submit" class="btn-eliminar"
+                                    onclick="return confirm('¿Estás seguro de eliminar este evento?')">
+                                <i class="bi bi-trash-fill"></i> Eliminar
+                            </button>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
-@if (eventoActivo.HasValue)
-{
-    var evento = Model.FirstOrDefault(e => e.IdEvento == eventoActivo.Value);
-    if (evento != null)
+    @if (eventoActivo.HasValue)
     {
-        <div class="panel-fases">
-            <h5 style="margin-bottom:1rem;">Asociaciones de: @evento.NombreEvento</h5>
+        var evento = Model.FirstOrDefault(e => e.IdEvento == eventoActivo.Value);
+        if (evento != null)
+        {
+            <div class="panel-fases">
+                <h5 style="margin-bottom:1rem;">Asociaciones de: @evento.NombreEvento</h5>
 
-            <div class="row g-3">
-                <!-- Proyectos asociados -->
-                <div class="col-md-6">
-                    <div class="fase-item">
-                        <div class="fase-enc">
-                            <div class="fase-nombre">Proyectos asociados</div>
-                            @using (Html.BeginForm("AsociarProyecto", "Administrador", FormMethod.Post))
-                            {
-                                <input type="hidden" name="eventoId" value="@eventoActivo.Value" />
-                                <div class="acciones">
-                                    <select name="proyectoId" class="form-control form-control-sm" style="width:160px;">
-                                        <option value="">Selecciona...</option>
-                                        @foreach (var proyecto in ViewBag.Proyectos as IEnumerable<GestionSemilleros.Models.Entidades.Proyecto>)
-                                        {
-                                            <option value="@proyecto.IdProyecto">@proyecto.TituloProyecto</option>
-                                        }
-                                    </select>
-                                    <button type="submit" class="btn-guardar" style="padding:5px 10px; font-size:12px;">
-                                        <i class="bi bi-plus-lg"></i>
-                                    </button>
-                                </div>
-                            }
-                        </div>
-                        <div class="actividades">
-                            @foreach (var proyecto in evento.Proyectos)
-                            {
-                                <div class="actividad-item">
-                                    <span>@proyecto.TituloProyecto</span>
-                                    @using (Html.BeginForm("DesasociarProyecto", "Administrador", FormMethod.Post, new { style = "display:inline" }))
-                                    {
-                                        @Html.Hidden("eventoId", eventoActivo.Value)
-                                        @Html.Hidden("proyectoId", proyecto.IdProyecto)
-                                        <button type="submit" class="btn-eliminar" style="font-size:11px; padding:2px 8px;">
-                                            <i class="bi bi-x"></i>
+                <div class="row g-3">
+                    <!-- Proyectos asociados -->
+                    <div class="col-md-6">
+                        <div class="fase-item">
+                            <div class="fase-enc">
+                                <div class="fase-nombre">Proyectos asociados</div>
+                                @using (Html.BeginForm("AsociarProyecto", "Administrador", FormMethod.Post))
+                                {
+                                    <input type="hidden" name="eventoId" value="@eventoActivo.Value" />
+                                    <div class="acciones">
+                                        <select name="proyectoId" class="form-control form-control-sm" style="width:160px;">
+                                            <option value="">Selecciona...</option>
+                                            @foreach (var proyecto in ViewBag.Proyectos as IEnumerable<GestionSemilleros.Models.Entidades.Proyecto>)
+                                            {
+                                                <option value="@proyecto.IdProyecto">@proyecto.TituloProyecto</option>
+                                            }
+                                        </select>
+                                        <button type="submit" class="btn-guardar" style="padding:5px 10px; font-size:12px;">
+                                            <i class="bi bi-plus-lg"></i>
                                         </button>
-                                    }
-                                </div>
-                            }
+                                    </div>
+                                }
+                            </div>
+                            <div class="actividades">
+                                @foreach (var proyecto in evento.Proyectos)
+                                {
+                                    <div class="actividad-item">
+                                        <span>@proyecto.TituloProyecto</span>
+                                        @using (Html.BeginForm("DesasociarProyecto", "Administrador", FormMethod.Post, new { style = "display:inline" }))
+                                        {
+                                            @Html.Hidden("eventoId", eventoActivo.Value)
+                                            @Html.Hidden("proyectoId", proyecto.IdProyecto)
+                                            <button type="submit" class="btn-eliminar" style="font-size:11px; padding:2px 8px;">
+                                                <i class="bi bi-x"></i>
+                                            </button>
+                                        }
+                                    </div>
+                                }
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Patrocinadores asociados -->
-                <div class="col-md-6">
-                    <div class="fase-item">
-                        <div class="fase-enc">
-                            <div class="fase-nombre">Patrocinadores asociados</div>
-                            @using (Html.BeginForm("AsociarPatrocinador", "Administrador", FormMethod.Post))
-                            {
-                                <input type="hidden" name="eventoId" value="@eventoActivo.Value" />
-                                <div class="acciones">
-                                    <select name="patrocinadorId" class="form-control form-control-sm" style="width:160px;">
-                                        <option value="">Selecciona...</option>
-                                        @foreach (var patrocinador in ViewBag.Patrocinadores as IEnumerable<GestionSemilleros.Models.Entidades.Patrocinador>)
-                                        {
-                                            <option value="@patrocinador.IdPatrocinador">@patrocinador.NombrePatrocinador</option>
-                                        }
-                                    </select>
-                                    <button type="submit" class="btn-guardar" style="padding:5px 10px; font-size:12px;">
-                                        <i class="bi bi-plus-lg"></i>
-                                    </button>
-                                </div>
-                            }
-                        </div>
-                        <div class="actividades">
-                            @foreach (var patrocinador in evento.Patrocinadores)
-                            {
-                                <div class="actividad-item">
-                                    <span>@patrocinador.NombrePatrocinador</span>
-                                    @using (Html.BeginForm("DesasociarPatrocinador", "Administrador", FormMethod.Post, new { style = "display:inline" }))
-                                    {
-                                        @Html.Hidden("eventoId", eventoActivo.Value)
-                                        @Html.Hidden("patrocinadorId", patrocinador.IdPatrocinador)
-                                        <button type="submit" class="btn-eliminar" style="font-size:11px; padding:2px 8px;">
-                                            <i class="bi bi-x"></i>
+                    <!-- Patrocinadores asociados -->
+                    <div class="col-md-6">
+                        <div class="fase-item">
+                            <div class="fase-enc">
+                                <div class="fase-nombre">Patrocinadores asociados</div>
+                                @using (Html.BeginForm("AsociarPatrocinador", "Administrador", FormMethod.Post))
+                                {
+                                    <input type="hidden" name="eventoId" value="@eventoActivo.Value" />
+                                    <div class="acciones">
+                                        <select name="patrocinadorId" class="form-control form-control-sm" style="width:160px;">
+                                            <option value="">Selecciona...</option>
+                                            @foreach (var patrocinador in ViewBag.Patrocinadores as IEnumerable<GestionSemilleros.Models.Entidades.Patrocinador>)
+                                            {
+                                                <option value="@patrocinador.IdPatrocinador">@patrocinador.NombrePatrocinador</option>
+                                            }
+                                        </select>
+                                        <button type="submit" class="btn-guardar" style="padding:5px 10px; font-size:12px;">
+                                            <i class="bi bi-plus-lg"></i>
                                         </button>
-                                    }
-                                </div>
-                            }
+                                    </div>
+                                }
+                            </div>
+                            <div class="actividades">
+                                @foreach (var patrocinador in evento.Patrocinadores)
+                                {
+                                    <div class="actividad-item">
+                                        <span>@patrocinador.NombrePatrocinador</span>
+                                        @using (Html.BeginForm("DesasociarPatrocinador", "Administrador", FormMethod.Post, new { style = "display:inline" }))
+                                        {
+                                            @Html.Hidden("eventoId", eventoActivo.Value)
+                                            @Html.Hidden("patrocinadorId", patrocinador.IdPatrocinador)
+                                            <button type="submit" class="btn-eliminar" style="font-size:11px; padding:2px 8px;">
+                                                <i class="bi bi-x"></i>
+                                            </button>
+                                        }
+                                    </div>
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        }
     }
-}
 
-<!-- Modal Registrar Evento -->
-<div class="modal fade" id="modalRegistrarEvento" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Registrar evento</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            @using (Html.BeginForm("RegistrarEvento", "Administrador", FormMethod.Post))
-            {
-                <div class="modal-body">
-                    <div class="row g-3">
-                        <div class="col-md-6 campo-form">
-                            <label>Nombre del evento</label>
-                            <input type="text" name="NombreEvento" class="form-control" required />
-                        </div>
-                        <div class="col-md-6 campo-form">
-                            <label>Tipo de evento</label>
-                            <input type="text" name="TipoEvento" class="form-control" required />
-                        </div>
-                        <div class="col-md-6 campo-form">
-                            <label>Lugar</label>
-                            <input type="text" name="LugarEvento" class="form-control" />
-                        </div>
-                        <div class="col-md-6 campo-form">
-                            <label>Fecha</label>
-                            <input type="date" name="FechaEvento" class="form-control" required />
-                        </div>
-                        <div class="col-md-12 campo-form">
-                            <label>Organizador</label>
-                            <input type="text" name="OrganizadorEvento" class="form-control" required />
+    <!-- Modal Registrar Evento -->
+    <div class="modal fade" id="modalRegistrarEvento" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Registrar evento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                @using (Html.BeginForm("RegistrarEvento", "Administrador", FormMethod.Post))
+                {
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-6 campo-form">
+                                <label>Nombre del evento</label>
+                                <input type="text" name="NombreEvento" class="form-control" required />
+                            </div>
+                            <div class="col-md-6 campo-form">
+                                <label>Tipo de evento</label>
+                                <input type="text" name="TipoEvento" class="form-control" required />
+                            </div>
+                            <div class="col-md-6 campo-form">
+                                <label>Lugar</label>
+                                <input type="text" name="LugarEvento" class="form-control" />
+                            </div>
+                            <div class="col-md-6 campo-form">
+                                <label>Fecha</label>
+                                <input type="date" name="FechaEvento" class="form-control" required />
+                            </div>
+                            <div class="col-md-12 campo-form">
+                                <label>Organizador</label>
+                                <input type="text" name="OrganizadorEvento" class="form-control" required />
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn-guardar">Guardar</button>
-                </div>
-            }
+                    <div class="modal-footer">
+                        <button type="button" class="btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn-guardar">Guardar</button>
+                    </div>
+                }
+            </div>
         </div>
     </div>
-</div>
 
-<!-- Modal Editar Evento -->
-<div class="modal fade" id="modalEditarEvento" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Editar evento</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            @using (Html.BeginForm("ModificarEvento", "Administrador", FormMethod.Post))
-            {
-                <div class="modal-body">
-                    <input type="hidden" name="IdEvento" id="editEventoId" />
-                    <div class="row g-3">
-                        <div class="col-md-6 campo-form">
-                            <label>Nombre del evento</label>
-                            <input type="text" name="NombreEvento" id="editEventoNombre" class="form-control" required />
-                        </div>
-                        <div class="col-md-6 campo-form">
-                            <label>Tipo de evento</label>
-                            <input type="text" name="TipoEvento" id="editEventoTipo" class="form-control" required />
-                        </div>
-                        <div class="col-md-6 campo-form">
-                            <label>Lugar</label>
-                            <input type="text" name="LugarEvento" id="editEventoLugar" class="form-control" />
-                        </div>
-                        <div class="col-md-6 campo-form">
-                            <label>Fecha</label>
-                            <input type="date" name="FechaEvento" id="editEventoFecha" class="form-control" required />
-                        </div>
-                        <div class="col-md-12 campo-form">
-                            <label>Organizador</label>
-                            <input type="text" name="OrganizadorEvento" id="editEventoOrganizador" class="form-control" required />
+    <!-- Modal Editar Evento -->
+    <div class="modal fade" id="modalEditarEvento" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar evento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                @using (Html.BeginForm("ModificarEvento", "Administrador", FormMethod.Post))
+                {
+                    <div class="modal-body">
+                        <input type="hidden" name="IdEvento" id="editEventoId" />
+                        <div class="row g-3">
+                            <div class="col-md-6 campo-form">
+                                <label>Nombre del evento</label>
+                                <input type="text" name="NombreEvento" id="editEventoNombre" class="form-control" required />
+                            </div>
+                            <div class="col-md-6 campo-form">
+                                <label>Tipo de evento</label>
+                                <input type="text" name="TipoEvento" id="editEventoTipo" class="form-control" required />
+                            </div>
+                            <div class="col-md-6 campo-form">
+                                <label>Lugar</label>
+                                <input type="text" name="LugarEvento" id="editEventoLugar" class="form-control" />
+                            </div>
+                            <div class="col-md-6 campo-form">
+                                <label>Fecha</label>
+                                <input type="date" name="FechaEvento" id="editEventoFecha" class="form-control" required />
+                            </div>
+                            <div class="col-md-12 campo-form">
+                                <label>Organizador</label>
+                                <input type="text" name="OrganizadorEvento" id="editEventoOrganizador" class="form-control" required />
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn-guardar">Guardar</button>
-                </div>
-            }
+                    <div class="modal-footer">
+                        <button type="button" class="btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn-guardar">Guardar</button>
+                    </div>
+                }
+            </div>
         </div>
     </div>
-</div>
 
-@section Scripts {
-    <script>
-    document.getElementById('modalEditarEvento').addEventListener('show.bs.modal', function (event) {
-        var boton = event.relatedTarget;
-        document.getElementById('editEventoId').value = boton.getAttribute('data-id');
-        document.getElementById('editEventoNombre').value = boton.getAttribute('data-nombre');
-        document.getElementById('editEventoTipo').value = boton.getAttribute('data-tipo');
-        document.getElementById('editEventoLugar').value = boton.getAttribute('data-lugar');
-        document.getElementById('editEventoFecha').value = boton.getAttribute('data-fecha');
-        document.getElementById('editEventoOrganizador').value = boton.getAttribute('data-organizador');
-    });
-    </script>
-}
+    @section Scripts {
+        <script>
+            document.getElementById('modalEditarEvento').addEventListener('show.bs.modal', function (event) {
+                var boton = event.relatedTarget;
+                document.getElementById('editEventoId').value = boton.getAttribute('data-id');
+                document.getElementById('editEventoNombre').value = boton.getAttribute('data-nombre');
+                document.getElementById('editEventoTipo').value = boton.getAttribute('data-tipo');
+                document.getElementById('editEventoLugar').value = boton.getAttribute('data-lugar');
+                document.getElementById('editEventoFecha').value = boton.getAttribute('data-fecha');
+                document.getElementById('editEventoOrganizador').value = boton.getAttribute('data-organizador');
+            });
+        </script>
+    }

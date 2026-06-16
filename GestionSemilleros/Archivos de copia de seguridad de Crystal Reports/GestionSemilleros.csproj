@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\EntityFramework.6.6.0-preview1-final\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.6.0-preview1-final\build\EntityFramework.props')" />
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="..\packages\EntityFramework.6.6.0-preview1-final\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.6.0-preview1-final\build\EntityFramework.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -46,15 +46,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CrystalDecisions.CrystalReports.Engine">
-      <HintPath>..\..\..\..\..\..\..\program files (x86)\sap businessobjects\crystal reports for .net framework 4.0\common\sap businessobjects enterprise xi 4.0\win64_x64\dotnet\CrystalDecisions.CrystalReports.Engine.dll</HintPath>
+    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.ReportSource, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+      <HintPath>..\packages\CrystalDecisions.ReportSource.1.0.0\lib\CrystalDecisions.ReportSource.dll</HintPath>
     </Reference>
-    <Reference Include="CrystalDecisions.ReportSource">
-      <HintPath>..\..\..\..\..\..\..\program files (x86)\sap businessobjects\crystal reports for .net framework 4.0\common\sap businessobjects enterprise xi 4.0\win64_x64\dotnet\CrystalDecisions.ReportSource.dll</HintPath>
-    </Reference>
-    <Reference Include="CrystalDecisions.Shared">
-      <HintPath>..\..\..\..\..\..\..\program files (x86)\sap businessobjects\crystal reports for .net framework 4.0\common\sap businessobjects enterprise xi 4.0\win64_x64\dotnet\CrystalDecisions.Shared.dll</HintPath>
-    </Reference>
+    <Reference Include="CrystalDecisions.Shared, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.6.0-preview1-final\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -135,7 +131,6 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AdministradorController.cs" />
-    <Compile Include="Controllers\InvestigadorController.cs" />
     <Compile Include="Controllers\LiderController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Global.asax.cs">
@@ -165,16 +160,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ReporteActividadesDataSet.xsd</DependentUpon>
     </Compile>
-    <Compile Include="ReportePatrocinadoresDataSet.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ReportePatrocinadoresDataSet.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="ReporteReunionesDataSet.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ReporteReunionesDataSet.xsd</DependentUpon>
-    </Compile>
     <Compile Include="ReporteFasesDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -185,33 +170,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ReporteSemillerosDataSet.xsd</DependentUpon>
     </Compile>
-    <Compile Include="ReportesEventosDataSet.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ReportesEventosDataSet.xsd</DependentUpon>
-    </Compile>
     <Compile Include="ReportesproyectosDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ReportesproyectosDataSet.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Reportes\ReportePatrocinador.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ReportePatrocinador.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reportes\ReporteReuniones.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ReporteReuniones.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reportes\ReportesEventos.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ReportesEventos.rpt</DependentUpon>
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reportes\ReporteActividades.cs">
       <AutoGen>True</AutoGen>
@@ -295,28 +257,6 @@
     <Content Include="ReporteActividadesDataSet.xss">
       <DependentUpon>ReporteActividadesDataSet.xsd</DependentUpon>
     </Content>
-    <Content Include="ReporteReunionesDataSet.xsc">
-      <DependentUpon>ReporteReunionesDataSet.xsd</DependentUpon>
-    </Content>
-    <Content Include="ReportePatrocinadoresDataSet.xsc">
-      <DependentUpon>ReportePatrocinadoresDataSet.xsd</DependentUpon>
-    </Content>
-    <None Include="ReportePatrocinadoresDataSet.xsd">
-      <SubType>Designer</SubType>
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>ReportePatrocinadoresDataSet.Designer.cs</LastGenOutput>
-    </None>
-    <Content Include="ReportePatrocinadoresDataSet.xss">
-      <DependentUpon>ReportePatrocinadoresDataSet.xsd</DependentUpon>
-    </Content>
-    <None Include="ReporteReunionesDataSet.xsd">
-      <SubType>Designer</SubType>
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>ReporteReunionesDataSet.Designer.cs</LastGenOutput>
-    </None>
-    <Content Include="ReporteReunionesDataSet.xss">
-      <DependentUpon>ReporteReunionesDataSet.xsd</DependentUpon>
-    </Content>
     <None Include="ReporteFasesDataSet.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
@@ -338,17 +278,6 @@
     </Content>
     <Content Include="ReportesproyectosDataSet.xsc">
       <DependentUpon>ReportesproyectosDataSet.xsd</DependentUpon>
-    </Content>
-    <Content Include="ReportesEventosDataSet.xsc">
-      <DependentUpon>ReportesEventosDataSet.xsd</DependentUpon>
-    </Content>
-    <None Include="ReportesEventosDataSet.xsd">
-      <SubType>Designer</SubType>
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>ReportesEventosDataSet.Designer.cs</LastGenOutput>
-    </None>
-    <Content Include="ReportesEventosDataSet.xss">
-      <DependentUpon>ReportesEventosDataSet.xsd</DependentUpon>
     </Content>
     <None Include="ReportesproyectosDataSet.xsd">
       <SubType>Designer</SubType>
@@ -405,11 +334,6 @@
     <Content Include="Views\Lider\Investigadores.cshtml" />
     <Content Include="Views\Lider\Proyectos.cshtml" />
     <Content Include="Views\Lider\Reuniones.cshtml" />
-    <Content Include="Views\Investigador\Index.cshtml" />
-    <Content Include="Views\Investigador\MiSemillero.cshtml" />
-    <Content Include="Views\Investigador\Proyectos.cshtml" />
-    <Content Include="Views\Investigador\Reuniones.cshtml" />
-    <Content Include="Views\Shared\_LayoutInvestigador.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -447,18 +371,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202606130421572_AgregarDuracionReunion.resx">
       <DependentUpon>202606130421572_AgregarDuracionReunion.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reportes\ReportePatrocinador.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>ReportePatrocinador.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reportes\ReporteReuniones.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>ReporteReuniones.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reportes\ReportesEventos.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>ReportesEventos.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Reportes\ReporteActividades.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
@@ -516,9 +428,9 @@
     <PropertyGroup>
       <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Use la restauración de paquetes NuGet para descargarlos. Para obtener más información, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
     <Error Condition="!Exists('..\packages\EntityFramework.6.6.0-preview1-final\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.6.0-preview1-final\build\EntityFramework.props'))" />
     <Error Condition="!Exists('..\packages\EntityFramework.6.6.0-preview1-final\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.6.0-preview1-final\build\EntityFramework.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
   </Target>
   <Import Project="..\packages\EntityFramework.6.6.0-preview1-final\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.6.0-preview1-final\build\EntityFramework.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

@@ -1,0 +1,72 @@
+﻿@model IEnumerable<GestionSemilleros.Models.Entidades.Reunion>
+@{
+    ViewBag.Title = "Reuniones";
+    Layout = "~/Views/Shared/_LayoutInvestigador.cshtml";
+}
+
+<div class="filtros-panel">
+    <span class="filtros-label">Consultar por parámetros</span>
+    @using (Html.BeginForm("Reuniones", "Investigador", FormMethod.Get))
+    {
+        <div class="filtros-fila">
+            <span style="font-size:13px; font-weight:500; color:#374151; white-space:nowrap;">Selecciona la opción</span>
+            <select name="filtroCampo" class="filtro-select" onchange="this.form.submit()">
+                <option value="">Selecciona...</option>
+                <option value="Tipo" @(ViewBag.FiltroCampo == "Tipo" ? "selected" : "")>Tipo</option>
+                <option value="Estado" @(ViewBag.FiltroCampo == "Estado" ? "selected" : "")>Estado</option>
+            </select>
+            <select name="filtroValor" class="filtro-select">
+                <option value="">Todos</option>
+                @foreach (var valor in ViewBag.ValoresFiltro as List<string>)
+                {
+                    <option value="@valor" @(ViewBag.FiltroValor == valor ? "selected" : "")>@valor</option>
+                }
+            </select>
+            <button type="submit" class="btn-buscar">
+                <i class="bi bi-search"></i> Buscar
+            </button>
+            <a href="@Url.Action("Reuniones", "Investigador")" class="btn-limpiar">
+                <i class="bi bi-eraser"></i> Limpiar
+            </a>
+        </div>
+    }
+</div>
+
+<div class="encabezado-modulo">
+    <h4>Mis Reuniones</h4>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tipo</th>
+            <th>Motivo</th>
+            <th>Fecha</th>
+            <th>Hora inicio</th>
+            <th>Hora fin</th>
+            <th>Participantes</th>
+            <th>Estado</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var reunion in Model)
+        {
+            var horaFin = reunion.HoraReunion.Add(TimeSpan.FromMinutes(reunion.DuracionMinutos));
+            <tr>
+                <td>@reunion.IdReunion</td>
+                <td>@reunion.TipoReunion</td>
+                <td>@reunion.MotivoReunion</td>
+                <td>@reunion.FechaReunion.ToString("yyyy-MM-dd")</td>
+                <td>@reunion.HoraReunion.ToString(@"hh\:mm")</td>
+                <td>@horaFin.ToString(@"hh\:mm")</td>
+                <td>@string.Join(", ", reunion.Usuarios.Select(u => u.NombresUsuario))</td>
+                <td>
+                    <span class="badge-estado @reunion.EstadoReunion.ToLower().Replace(" ", "-")">
+                        @reunion.EstadoReunion
+                    </span>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
