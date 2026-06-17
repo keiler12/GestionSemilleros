@@ -11,7 +11,7 @@ namespace GestionSemilleros.Models.Entidades
         public int IdPatrocinador { get; set; }
         public string NombrePatrocinador { get; set; }
         public string TipoPatrocinador { get; set; }
-        public decimal TelefonoPatrocinador { get; set; }
+        public string TelefonoPatrocinador { get; set; }
         public string CorreoPatrocinador { get; set; }
 
         public virtual ICollection<Evento> Eventos { get; set; }

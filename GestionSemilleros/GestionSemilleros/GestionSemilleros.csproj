@@ -135,6 +135,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AdministradorController.cs" />
+    <Compile Include="Controllers\AsistenteController.cs" />
     <Compile Include="Controllers\InvestigadorController.cs" />
     <Compile Include="Controllers\LiderController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
@@ -148,6 +149,10 @@
     <Compile Include="Migrations\202606130421572_AgregarDuracionReunion.cs" />
     <Compile Include="Migrations\202606130421572_AgregarDuracionReunion.Designer.cs">
       <DependentUpon>202606130421572_AgregarDuracionReunion.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202606170044388_TelefonoPatrocinadorAString.cs" />
+    <Compile Include="Migrations\202606170044388_TelefonoPatrocinadorAString.Designer.cs">
+      <DependentUpon>202606170044388_TelefonoPatrocinadorAString.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Entidades\Actividad.cs" />
@@ -248,6 +253,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ReporteUsuariosDataSet.xsd</DependentUpon>
     </Compile>
+    <Compile Include="Services\GeminiService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-grid.css" />
@@ -413,6 +419,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Asistente\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
@@ -447,6 +454,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202606130421572_AgregarDuracionReunion.resx">
       <DependentUpon>202606130421572_AgregarDuracionReunion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202606170044388_TelefonoPatrocinadorAString.resx">
+      <DependentUpon>202606170044388_TelefonoPatrocinadorAString.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reportes\ReportePatrocinador.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

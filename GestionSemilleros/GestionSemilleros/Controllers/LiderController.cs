@@ -78,6 +78,13 @@ namespace GestionSemilleros.Controllers
             if (Session["Rol"] == null || Session["Rol"].ToString() != "Lider")
                 return RedirectToAction("Index", "Login");
 
+            // Validar que el teléfono solo contenga números
+            if (usuario.TelefonoUsuario.ToString().Any(c => !char.IsDigit(c)))
+            {
+                TempData["Error"] = "El teléfono solo puede contener números.";
+                return RedirectToAction("Usuarios");
+            }
+
             var idUsuarioLider = (int)Session["IdUsuario"];
             var lider = baseDatos.Usuarios.Find(idUsuarioLider);
 
@@ -242,6 +249,19 @@ namespace GestionSemilleros.Controllers
                 return RedirectToAction("Proyectos");
             }
 
+            var proyectosDelSemillero = baseDatos.Proyectos
+            .Where(p => p.IdSemillero == proyecto.IdSemillero)
+            .ToList();
+
+            foreach (var p in proyectosDelSemillero)
+            {
+                if (proyecto.FechaInicioProyecto < p.FechaFinProyecto && proyecto.FechaFinProyecto > p.FechaInicioProyecto)
+                {
+                    TempData["Error"] = $"Este semillero ya tiene un proyecto (\"{p.TituloProyecto}\") que se cruza con esas fechas.";
+                    return RedirectToAction("Proyectos");
+                }
+            }
+
             baseDatos.Proyectos.Add(proyecto);
             baseDatos.SaveChanges();
             return RedirectToAction("Proyectos");
@@ -283,6 +303,19 @@ namespace GestionSemilleros.Controllers
 
             var idUsuario = (int)Session["IdUsuario"];
             var usuario = baseDatos.Usuarios.Find(idUsuario);
+
+            var proyectosDelSemillero = baseDatos.Proyectos
+            .Where(p => p.IdSemillero == proyecto.IdSemillero)
+            .ToList();
+
+            foreach (var p in proyectosDelSemillero)
+            {
+                if (proyecto.FechaInicioProyecto < p.FechaFinProyecto && proyecto.FechaFinProyecto > p.FechaInicioProyecto)
+                {
+                    TempData["Error"] = $"Este semillero ya tiene un proyecto (\"{p.TituloProyecto}\") que se cruza con esas fechas.";
+                    return RedirectToAction("Proyectos");
+                }
+            }
 
             var registro = baseDatos.Proyectos
                 .FirstOrDefault(p => p.IdProyecto == proyecto.IdProyecto && p.IdSemillero == usuario.IdSemillero);

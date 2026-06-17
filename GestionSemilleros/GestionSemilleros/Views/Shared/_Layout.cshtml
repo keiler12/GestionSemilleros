@@ -52,5 +52,60 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     @RenderSection("Scripts", required: false)
+
+    <!-- Botón flotante del asistente -->
+    <div id="botonAsistente" onclick="toggleAsistente()" style="position:fixed; bottom:24px; right:24px; width:56px; height:56px; background:#185FA5; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.25); z-index:1000;">
+        <i class="bi bi-robot" style="color:#fff; font-size:24px;"></i>
+    </div>
+
+    <!-- Panel del chat -->
+    <div id="panelAsistente" style="display:none; position:fixed; bottom:90px; right:24px; width:340px; height:450px; background:#fff; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.2); z-index:1000; flex-direction:column; overflow:hidden;">
+        <div style="background:#185FA5; color:#fff; padding:12px 16px; font-size:14px; font-weight:500; display:flex; align-items:center; justify-content:space-between;">
+            <span><i class="bi bi-robot"></i> Asistente Virtual</span>
+            <i class="bi bi-x" style="cursor:pointer; font-size:18px;" onclick="toggleAsistente()"></i>
+        </div>
+        <div id="mensajesChat" style="flex:1; padding:12px; overflow-y:auto; font-size:13px; display:flex; flex-direction:column; gap:8px;">
+            <div style="background:#f0f6fd; padding:8px 12px; border-radius:8px; align-self:flex-start; max-width:85%;">
+                ¡Hola! Soy tu asistente virtual. Pregúntame lo que necesites sobre el sistema.
+            </div>
+        </div>
+        <div style="padding:10px; border-top:1px solid #e5e7eb; display:flex; gap:8px;">
+            <input type="text" id="inputPregunta" placeholder="Escribe tu pregunta..." style="flex:1; border:1px solid #d1d5db; border-radius:8px; padding:8px 10px; font-size:13px;" onkeypress="if(event.key==='Enter') enviarPregunta()" />
+            <button onclick="enviarPregunta()" style="background:#185FA5; color:#fff; border:none; border-radius:8px; padding:8px 12px; cursor:pointer;">
+                <i class="bi bi-send-fill"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+    function toggleAsistente() {
+        var panel = document.getElementById('panelAsistente');
+        panel.style.display = panel.style.display === 'none' ? 'flex' : 'none';
+    }
+
+    function enviarPregunta() {
+        var input = document.getElementById('inputPregunta');
+        var pregunta = input.value.trim();
+        if (!pregunta) return;
+
+        var mensajes = document.getElementById('mensajesChat');
+        mensajes.innerHTML += `<div style="background:#185FA5; color:#fff; padding:8px 12px; border-radius:8px; align-self:flex-end; max-width:85%;">${pregunta}</div>`;
+        input.value = '';
+        mensajes.scrollTop = mensajes.scrollHeight;
+
+        fetch('@Url.Action("Consultar", "Asistente")', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'pregunta=' + encodeURIComponent(pregunta)
+        })
+        .then(res => res.json())
+        .then(data => {
+            mensajes.innerHTML += `<div style="background:#f0f6fd; padding:8px 12px; border-radius:8px; align-self:flex-start; max-width:85%;">${data.respuesta}</div>`;
+            mensajes.scrollTop = mensajes.scrollHeight;
+        });
+    }
+    </script>
+
+
 </body>
 </html>

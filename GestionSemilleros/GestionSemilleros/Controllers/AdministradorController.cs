@@ -99,14 +99,16 @@ namespace GestionSemilleros.Controllers
 
         public ActionResult Usuarios(string filtroCampo, string filtroValor)
         {
+            // Verificar que el usuario tenga rol de Administrador, si no lo tiene redirigir al login
             if (Session["Rol"] == null || Session["Rol"].ToString() != "Administrador")
                 return RedirectToAction("Index", "Login");
-
+            // Configurar el menú activo y cargar los filtros disponibles para la vista
             ViewBag.MenuActivo = "Usuarios";
             ViewBag.FiltroCampo = filtroCampo;
             ViewBag.FiltroValor = filtroValor;
             ViewBag.Semilleros = baseDatos.Semilleros.ToList();
 
+            // Cargar valores según campo seleccionado
             if (filtroCampo == "Nombre")
                 ViewBag.ValoresFiltro = baseDatos.Usuarios.Select(u => u.NombresUsuario).Distinct().ToList();
             else if (filtroCampo == "Rol")
@@ -118,8 +120,10 @@ namespace GestionSemilleros.Controllers
             else
                 ViewBag.ValoresFiltro = new List<string>();
 
-            var lista = baseDatos.Usuarios.Include("Semillero").AsQueryable();
+            // Obtener la lista de usuarios incluyendo su semillero asociado, y aplicar los filtros si se han seleccionado
+            var lista = baseDatos.Usuarios.Include("Semillero").AsQueryable();//asQueryable permite construir la consulta de forma dinámica y aplicar filtros condicionalmente
 
+            // Aplicar filtros según el campo y valor seleccionados por el usuario en la vista
             if (!string.IsNullOrEmpty(filtroCampo) && !string.IsNullOrEmpty(filtroValor))
             {
                 if (filtroCampo == "Nombre")
@@ -132,7 +136,7 @@ namespace GestionSemilleros.Controllers
                     lista = lista.Where(u => u.Semillero.NombreSemillero == filtroValor);
             }
 
-            return View(lista.ToList());
+            return View(lista.ToList());// Convierte la consulta a una lista y la pasa a la vista para su renderizado
         }
 
         [HttpPost]
@@ -141,13 +145,17 @@ namespace GestionSemilleros.Controllers
             // Validar que el teléfono solo contenga números
             if (usuario.TelefonoUsuario.ToString().Any(c => !char.IsDigit(c)))
             {
-                TempData["Error"] = "El teléfono solo puede contener números.";
+                TempData["Error"] = "El teléfono solo puede contener números.";// Almacena un mensaje de error en TempData para mostrarlo en la vista después de redirigir
                 return RedirectToAction("Usuarios");
             }
 
+            usuario.EstadoUsuario = "Activo";// Establece el estado del nuevo usuario como "Activo" por defecto
+
+            // Agrega el nuevo usuario a la base de datos y guarda los cambios
             baseDatos.Usuarios.Add(usuario);
-            baseDatos.SaveChanges();
-            return RedirectToAction("Usuarios");
+            baseDatos.SaveChanges();// Guarda los cambios en la base de datos para que el nuevo usuario se persista
+
+            return RedirectToAction("Usuarios");// Redirige a la acción "Usuarios" para mostrar la lista actualizada de usuarios después de agregar el nuevo usuario
         }
 
 
@@ -166,9 +174,18 @@ namespace GestionSemilleros.Controllers
         [HttpPost]
         public ActionResult ModificarUsuario(Usuario usuario)
         {
+            // Validar que el teléfono solo contenga números
+            if (usuario.TelefonoUsuario.ToString().Any(c => !char.IsDigit(c)))
+            {
+                TempData["Error"] = "El teléfono solo puede contener números.";
+                return RedirectToAction("Usuarios");
+            }
+
+            // Busca el usuario existente en la base de datos por su ID y actualiza sus propiedades con los nuevos valores proporcionados
             var registro = baseDatos.Usuarios.Find(usuario.IdUsuario);
             if (registro != null)
             {
+                // Actualiza las propiedades del usuario con los nuevos valores proporcionados en el objeto "usuario" recibido como parámetro
                 registro.NombresUsuario = usuario.NombresUsuario;
                 registro.CorreoUsuario = usuario.CorreoUsuario;
                 registro.ContraseñaUsuario = usuario.ContraseñaUsuario;
@@ -196,12 +213,14 @@ namespace GestionSemilleros.Controllers
         }
 
 
-        // ==================== PROYECTOS ====================
+        //PROYECTOS 
         public ActionResult Proyectos(int? proyectoActivo, string filtroCampo, string filtroValor)
         {
+            // Verificar que el usuario tenga rol de Administrador, si no lo tiene redirigir al login
             if (Session["Rol"] == null || Session["Rol"].ToString() != "Administrador")
                 return RedirectToAction("Index", "Login");
 
+            // Configurar el menú activo y cargar los filtros disponibles para la vista
             ViewBag.MenuActivo = "Proyectos";
             ViewBag.Semilleros = baseDatos.Semilleros.ToList();
             ViewBag.ProyectoActivo = proyectoActivo;
@@ -210,6 +229,7 @@ namespace GestionSemilleros.Controllers
             ViewBag.SemanasDisponibles = 0;
             ViewBag.SemanasTotal = 0;
 
+            // Cargar valores según campo seleccionado
             if (filtroCampo == "Titulo")
                 ViewBag.ValoresFiltro = baseDatos.Proyectos.Select(p => p.TituloProyecto).Distinct().ToList();
             else if (filtroCampo == "Semillero")
@@ -219,26 +239,28 @@ namespace GestionSemilleros.Controllers
 
             var lista = baseDatos.Proyectos.Include("Fases.Actividades").AsQueryable();
 
-            if (!string.IsNullOrEmpty(filtroCampo) && !string.IsNullOrEmpty(filtroValor))
+            if (!string.IsNullOrEmpty(filtroCampo) && !string.IsNullOrEmpty(filtroValor))//isnullorempty verifica que el filtroCampo y filtroValor no sean nulos o vacíos antes de aplicar los filtros a la consulta de proyectos, lo que evita errores y asegura que solo se apliquen los filtros cuando ambos valores estén presentes
             {
+                
                 if (filtroCampo == "Titulo")
-                    lista = lista.Where(p => p.TituloProyecto.Contains(filtroValor));
+                    lista = lista.Where(p => p.TituloProyecto.Contains(filtroValor));//contains permite buscar coincidencias parciales en el título del proyecto, lo que hace que el filtro sea más flexible y amigable para el usuario
                 else if (filtroCampo == "Semillero")
                     lista = lista.Where(p => p.Semillero.NombreSemillero == filtroValor);
             }
 
-            var listaProyectos = lista.ToList();
+            var listaProyectos = lista.ToList();// Convierte la consulta a una lista para su uso en la vista
 
-            if (proyectoActivo.HasValue)
+            if (proyectoActivo.HasValue)// Si se ha seleccionado un proyecto activo, calcula las semanas disponibles y los días disponibles por fase para ese proyecto específico, lo que permite mostrar esta información en la vista para el proyecto seleccionado
             {
                 var proyecto = listaProyectos.FirstOrDefault(p => p.IdProyecto == proyectoActivo.Value);
                 if (proyecto != null)
                 {
-                    var diasProyecto = (proyecto.FechaFinProyecto - proyecto.FechaInicioProyecto).TotalDays;
-                    var semanasTotal = (int)(diasProyecto / 7);
-                    var semanasUsadas = proyecto.Fases.Sum(f => f.DuracionFase);
-                    ViewBag.SemanasDisponibles = semanasTotal - semanasUsadas;
-                    ViewBag.SemanasTotal = semanasTotal;
+                    
+                    var diasProyecto = (proyecto.FechaFinProyecto - proyecto.FechaInicioProyecto).TotalDays;// Calcula la duración total del proyecto en días restando la fecha de inicio de la fecha de fin y obteniendo el total de días
+                    var semanasTotal = (int)(diasProyecto / 7);// Convierte la duración total del proyecto de días a semanas dividiendo el total de días entre 7 y convirtiendo el resultado a un entero para obtener el número total de semanas disponibles para el proyecto
+                    var semanasUsadas = proyecto.Fases.Sum(f => f.DuracionFase);// Calcula el total de semanas usadas sumando la duración de cada fase del proyecto, lo que representa el tiempo ya asignado a las fases del proyecto
+                    ViewBag.SemanasDisponibles = semanasTotal - semanasUsadas;// Calcula las semanas disponibles restando las semanas usadas de las semanas totales, lo que representa el tiempo restante que aún no ha sido asignado a ninguna fase del proyecto
+                    ViewBag.SemanasTotal = semanasTotal;// Almacena el número total de semanas disponibles para el proyecto en ViewBag.SemanasTotal para mostrarlo en la vista
 
                     var diasDisponiblesPorFase = new Dictionary<int, int>();
                     foreach (var fase in proyecto.Fases)
@@ -285,6 +307,19 @@ namespace GestionSemilleros.Controllers
                 return RedirectToAction("Proyectos");
             }
 
+            var proyectosDelSemillero = baseDatos.Proyectos
+            .Where(p => p.IdSemillero == proyecto.IdSemillero)
+            .ToList();
+
+            foreach (var p in proyectosDelSemillero)
+            {
+                if (proyecto.FechaInicioProyecto < p.FechaFinProyecto && proyecto.FechaFinProyecto > p.FechaInicioProyecto)
+                {
+                    TempData["Error"] = $"Este semillero ya tiene un proyecto (\"{p.TituloProyecto}\") que se cruza con esas fechas.";
+                    return RedirectToAction("Proyectos");
+                }
+            }
+
             baseDatos.Proyectos.Add(proyecto);
             baseDatos.SaveChanges();
             return RedirectToAction("Proyectos");
@@ -321,7 +356,23 @@ namespace GestionSemilleros.Controllers
                 return RedirectToAction("Proyectos");
             }
 
+            var proyectosDelSemillero = baseDatos.Proyectos
+                .Where(p => p.IdSemillero == proyecto.IdSemillero
+                         && p.IdProyecto != proyecto.IdProyecto)
+                .ToList();
+
+            foreach (var p in proyectosDelSemillero)
+            {
+                if (proyecto.FechaInicioProyecto < p.FechaFinProyecto &&
+                    proyecto.FechaFinProyecto > p.FechaInicioProyecto)
+                {
+                    TempData["Error"] = $"Este semillero ya tiene un proyecto (\"{p.TituloProyecto}\") que se cruza con esas fechas.";
+                    return RedirectToAction("Proyectos");
+                }
+            }
+
             var registro = baseDatos.Proyectos.Find(proyecto.IdProyecto);
+
             if (registro != null)
             {
                 registro.TituloProyecto = proyecto.TituloProyecto;
@@ -330,8 +381,10 @@ namespace GestionSemilleros.Controllers
                 registro.FechaInicioProyecto = proyecto.FechaInicioProyecto;
                 registro.FechaFinProyecto = proyecto.FechaFinProyecto;
                 registro.IdSemillero = proyecto.IdSemillero;
+
                 baseDatos.SaveChanges();
             }
+
             return RedirectToAction("Proyectos");
         }
 
@@ -347,7 +400,7 @@ namespace GestionSemilleros.Controllers
             return RedirectToAction("Proyectos");
         }
 
-        // ==================== FASES ====================
+        //  FASES
 
         [HttpPost]
         public ActionResult RegistrarFase(Fase fase, int proyectoId)
@@ -363,7 +416,7 @@ namespace GestionSemilleros.Controllers
         public ActionResult ModificarFase(Fase fase, int proyectoId)
         {
             var registro = baseDatos.Fases.Find(fase.IdFase);
-            if (registro != null)
+            if (registro != null)// Si se encuentra la fase, actualiza sus propiedades con los nuevos valores proporcionados
             {
                 registro.NombreFase = fase.NombreFase;
                 registro.DuracionFase = fase.DuracionFase;
@@ -384,23 +437,25 @@ namespace GestionSemilleros.Controllers
             return RedirectToAction("Proyectos", new { proyectoActivo = proyectoId });
         }
 
-        // ==================== ACTIVIDADES ====================
+        // ACTIVIDADES
         [HttpPost]
         public ActionResult RegistrarActividad(Actividad actividad, int proyectoId)
         {
-            var fase = baseDatos.Fases
-                .Include("Actividades")
-                .Include("Proyecto")
-                .FirstOrDefault(f => f.IdFase == actividad.IdFase);
+            
+            var fase = baseDatos.Fases// Busca la fase asociada a la actividad utilizando el IdFase proporcionado en el objeto "actividad" recibido como parámetro
+                .Include("Actividades")// Incluye las actividades relacionadas con la fase para poder calcular los días usados y disponibles
+                .Include("Proyecto")// Incluye el proyecto relacionado con la fase para acceder a las fechas del proyecto
+                .FirstOrDefault(f => f.IdFase == actividad.IdFase);// Busca la fase que coincide con el IdFase de la actividad, lo que permite obtener la información necesaria para validar la duración de la actividad y calcular su fecha de entrega en función de las fechas del proyecto y las actividades ya asignadas a la fase
 
+            // Si se encuentra la fase, calcula los días totales de la fase, los días usados por las actividades ya asignadas a la fase, y los días disponibles para nuevas actividades. Luego, valida que la duración de la nueva actividad no exceda los días disponibles en la fase, y si es válida, calcula la fecha de entrega de la actividad en función de las fechas del proyecto y las actividades ya asignadas a la fase
             if (fase != null)
             {
-                var diasTotalesFase = fase.DuracionFase * 7;
-                var diasUsados = fase.Actividades
-                    .Sum(a => string.IsNullOrEmpty(a.DuracionActividad) ? 0 : int.Parse(a.DuracionActividad));
-                var diasDisponibles = diasTotalesFase - diasUsados;
+                var diasTotalesFase = fase.DuracionFase * 7;// Calcula los días totales de la fase multiplicando su duración en semanas por 7 para obtener el total de días disponibles para actividades en esa fase
+                var diasUsados = fase.Actividades//calcula los días usados por las actividades ya asignadas a la fase sumando la duración de cada actividad, y si la duración de alguna actividad es nula o vacía, se considera como 0 días usados para esa actividad, lo que permite obtener el total de días ya asignados a actividades en esa fase
+                    .Sum(a => string.IsNullOrEmpty(a.DuracionActividad) ? 0 : int.Parse(a.DuracionActividad));//? es un operador ternario que verifica si la duración de la actividad es nula o vacía, y si es así, devuelve 0, de lo contrario, convierte la duración a un entero utilizando int.Parse para obtener el número de días usados por esa actividad
+                var diasDisponibles = diasTotalesFase - diasUsados;// Calcula los días disponibles para nuevas actividades restando los días usados de los días totales de la fase, lo que representa el tiempo restante que aún no ha sido asignado a ninguna actividad en esa fase
 
-                if (int.Parse(actividad.DuracionActividad) > diasDisponibles)
+                if (int.Parse(actividad.DuracionActividad) > diasDisponibles)// Verifica si la duración de la nueva actividad excede los días disponibles en la fase, y si es así, muestra un mensaje de error y redirige a la vista de proyectos
                 {
                     TempData["Error"] = $"Solo hay {diasDisponibles} días disponibles en esta fase.";
                     return RedirectToAction("Proyectos", new { proyectoActivo = proyectoId });
@@ -427,9 +482,10 @@ namespace GestionSemilleros.Controllers
             return RedirectToAction("Proyectos", new { proyectoActivo = proyectoId });
         }
 
-        // ==================== EVENTOS ====================
+        // EVENTOS
 
-        public ActionResult Eventos(int? eventoActivo, string filtroCampo, string filtroValor)
+        //
+        public ActionResult Eventos(int? eventoActivo, string filtroCampo, string filtroValor)//int ? permite que el parámetro eventoActivo sea opcional, lo que significa que la acción "Eventos" puede ser llamada sin proporcionar un valor para eventoActivo, y en ese caso, su valor será null, lo que permite mostrar la lista de eventos sin resaltar ningún evento específico como activo
         {
             if (Session["Rol"] == null || Session["Rol"].ToString() != "Administrador")
                 return RedirectToAction("Index", "Login");
@@ -471,7 +527,14 @@ namespace GestionSemilleros.Controllers
         [HttpPost]
         public ActionResult RegistrarEvento(Evento evento)
         {
-           
+            var hoy = DateTime.Today;
+            if (evento.FechaEvento < hoy)
+            {
+                TempData["Error"] = "La fecha del evento no puede ser en el pasado.";
+                return RedirectToAction("Eventos");
+            }
+
+
             baseDatos.Eventos.Add(evento);
             baseDatos.SaveChanges();
             return RedirectToAction("Eventos");
@@ -480,6 +543,13 @@ namespace GestionSemilleros.Controllers
         [HttpPost]
         public ActionResult ModificarEvento(Evento evento)
         {
+            var hoy = DateTime.Today;
+            if (evento.FechaEvento < hoy)
+            {
+                TempData["Error"] = "La fecha del evento no puede ser en el pasado.";
+                return RedirectToAction("Eventos");
+            }
+
             var registro = baseDatos.Eventos.Find(evento.IdEvento);
             if (registro != null)
             {
@@ -496,6 +566,7 @@ namespace GestionSemilleros.Controllers
         [HttpPost]
         public ActionResult EliminarEvento(int id)
         {
+            
             var registro = baseDatos.Eventos
                 .Include("Proyectos")
                 .Include("Patrocinadores")
@@ -511,7 +582,7 @@ namespace GestionSemilleros.Controllers
         }
 
         [HttpPost]
-        public ActionResult AsociarProyecto(int eventoId, int? proyectoId)
+        public ActionResult AsociarProyecto(int eventoId, int? proyectoId)// el ? permite que el parámetro proyectoId sea opcional, lo que significa que la acción "AsociarProyecto" puede ser llamada sin proporcionar un valor para proyectoId, y en ese caso, su valor será null, lo que permite manejar el caso en el que no se seleccione ningún proyecto para asociar al evento, evitando errores y permitiendo redirigir de vuelta a la vista de eventos sin realizar ninguna asociación
         {
             if (proyectoId == null)
                 return RedirectToAction("Eventos", new { eventoActivo = eventoId });
@@ -520,6 +591,7 @@ namespace GestionSemilleros.Controllers
                 .Include("Proyectos")
                 .FirstOrDefault(e => e.IdEvento == eventoId);
             var proyecto = baseDatos.Proyectos.Find(proyectoId);
+            // Si se encuentra el evento y el proyecto, y el proyecto no está ya asociado al evento, se agrega el proyecto a la colección de proyectos del evento y se guardan los cambios en la base de datos, lo que permite establecer la relación entre el evento y el proyecto seleccionado
             if (evento != null && proyecto != null && !evento.Proyectos.Any(p => p.IdProyecto == proyectoId))
             {
                 evento.Proyectos.Add(proyecto);
@@ -576,7 +648,7 @@ namespace GestionSemilleros.Controllers
             return RedirectToAction("Eventos", new { eventoActivo = eventoId });
         }
 
-        // ==================== PATROCINADORES ====================
+        // PATROCINADORES
         public ActionResult Patrocinadores(string filtroCampo, string filtroValor)
         {
             if (Session["Rol"] == null || Session["Rol"].ToString() != "Administrador")
@@ -609,7 +681,13 @@ namespace GestionSemilleros.Controllers
         [HttpPost]
         public ActionResult RegistrarPatrocinador(Patrocinador patrocinador)
         {
-          
+            // Convertir el teléfono a string para validar que solo contenga dígitos
+            if (patrocinador.TelefonoPatrocinador.ToString().Any(c => !char.IsDigit(c)))
+            {
+                TempData["Error"] = "El teléfono solo puede contener números.";
+                return RedirectToAction("Patrocinadores");
+            }
+
             baseDatos.Patrocinadores.Add(patrocinador);
             baseDatos.SaveChanges();
             return RedirectToAction("Patrocinadores");
@@ -618,6 +696,13 @@ namespace GestionSemilleros.Controllers
         [HttpPost]
         public ActionResult ModificarPatrocinador(Patrocinador patrocinador)
         {
+            // Convertir el teléfono a string para validar que solo contenga dígitos
+            if (patrocinador.TelefonoPatrocinador.ToString().Any(c => !char.IsDigit(c)))
+            {
+                TempData["Error"] = "El teléfono solo puede contener números.";
+                return RedirectToAction("Patrocinadores");
+            }
+
             var registro = baseDatos.Patrocinadores.Find(patrocinador.IdPatrocinador);
             if (registro != null)
             {
@@ -645,7 +730,7 @@ namespace GestionSemilleros.Controllers
             return RedirectToAction("Patrocinadores");
         }
 
-        // ==================== REUNIONES ====================
+        // REUNIONES 
         public ActionResult Reuniones(string filtroCampo, string filtroValor)
         {
             if (Session["Rol"] == null || Session["Rol"].ToString() != "Administrador")
@@ -879,13 +964,16 @@ namespace GestionSemilleros.Controllers
             if (Session["Rol"] == null || Session["Rol"].ToString() != "Administrador")
                 return RedirectToAction("Index", "Login");
 
+            // Cargar el reporte de semilleros y su dataset
             var reporte = new ReportDocument();
+            // Obtener la ruta física del archivo .rpt del reporte de semilleros utilizando Server.MapPath, lo que permite cargar el diseño del reporte desde el servidor y prepararlo para generar el PDF con los datos de los semilleros
             var rutaReporte = Server.MapPath("~/Reportes/ReporteSemilleros.rpt");
-            reporte.Load(rutaReporte);
-
+            reporte.Load(rutaReporte);// Carga el diseño del reporte desde la ruta especificada, lo que permite utilizar ese diseño para generar el PDF con los datos de los semilleros
+            // Crear una instancia del dataset específico para el reporte de semilleros, lo que proporciona la estructura de datos necesaria para llenar el reporte con la información de los semilleros obtenida de la base de datos
             var dataSet = new ReporteSemillerosDataSet();
-            var tablaDatos = dataSet.Tables[0];
+            var tablaDatos = dataSet.Tables[0];// Obtener la primera tabla del dataset, que es donde se agregarán las filas de datos correspondientes a los semilleros, lo que permite llenar el reporte con la información de cada semillero para generar el PDF final
 
+            // Recorrer la lista de semilleros obtenida de la base de datos, y por cada semillero, crear una nueva fila en la tabla del dataset, asignar los valores de las columnas correspondientes a las propiedades del semillero, y agregar la fila a la tabla, lo que permite llenar el dataset con la información de todos los semilleros para que el reporte pueda generar el PDF con esos datos
             foreach (var semillero in baseDatos.Semilleros.ToList())
             {
                 var fila = tablaDatos.NewRow();
@@ -896,11 +984,12 @@ namespace GestionSemilleros.Controllers
                 tablaDatos.Rows.Add(fila);
             }
 
-            reporte.SetDataSource(dataSet);
+            reporte.SetDataSource(dataSet);// Establecer el dataset como fuente de datos para el reporte, lo que permite que el reporte utilice la información de los semilleros almacenada en el dataset para generar el PDF final con los datos de cada semillero
 
-            Response.Buffer = false;
+            // Configurar la respuesta HTTP para que no se almacene en búfer, lo que permite enviar el PDF generado directamente al cliente sin esperar a que se complete toda la generación del reporte, lo que mejora la eficiencia y la experiencia del usuario al descargar el PDF con los datos de los semilleros
+            Response.Buffer = false;// Exportar el reporte a un flujo de datos en formato PDF utilizando el método ExportToStream, lo que genera el PDF con la información de los semilleros y lo prepara para ser enviado al cliente como una respuesta HTTP con el tipo de contenido "application/pdf", lo que permite que el navegador del cliente reconozca que se trata de un archivo PDF y lo maneje adecuadamente para su visualización o descarga
             var streamReporte = reporte.ExportToStream(ExportFormatType.PortableDocFormat);
-            return new FileStreamResult(streamReporte, "application/pdf");
+            return new FileStreamResult(streamReporte, "application/pdf");// Devolver el PDF generado como una respuesta HTTP utilizando FileStreamResult, lo que permite que el cliente reciba el PDF con los datos de los semilleros y lo maneje según su configuración (por ejemplo, mostrarlo en el navegador o descargarlo como un archivo), lo que completa el proceso de generación y entrega del reporte de semilleros en formato PDF al cliente
         }
 
         public ActionResult ReporteUsuarios()
@@ -1102,7 +1191,7 @@ namespace GestionSemilleros.Controllers
                 fila["IdPatrocinador"] = patro.IdPatrocinador;
                 fila["NombrePatrocinador"] = patro.NombrePatrocinador;
                 fila["TipoPatrocinador"] = patro.TipoPatrocinador;
-                fila["TelefonoPatrocinador"] = patro.TelefonoPatrocinador;
+                fila["ContactoPatrocinador"] = patro.TelefonoPatrocinador;
                 
                 tabla.Rows.Add(fila);
             }
